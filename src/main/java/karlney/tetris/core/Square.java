@@ -8,9 +8,9 @@ package karlney.tetris.core;
  */
 public class Square{
 
-    private PieceType type;
+    private final PieceType type;
 
-    private boolean filled;
+    private final boolean filled;
 
     public Square(PieceType type) {
         this.type = type;
@@ -26,15 +26,8 @@ public class Square{
         return filled;
     }
 
-    public void setFilled(boolean filled) {
-        this.filled = filled;
-    }
-
     public PieceType getType() {
         return type;
     }
 
-    public void setType(PieceType type) {
-        this.type = type;
-    }
 }

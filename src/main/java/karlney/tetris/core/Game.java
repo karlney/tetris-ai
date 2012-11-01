@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * This is the Game class. It is responsible of generating new blocks and handling block move down
  */
-public class TetrisGame {
+public class Game {
 
     private final static int NUMBER_OF_BLOCKS = 7;
     private final static int START_LEVEL = 4;
@@ -26,13 +26,13 @@ public class TetrisGame {
     //Current level
     private int level;
 
-    public TetrisGame(int level) {
+    public Game(int level) {
         this.level=level;
         paused=false;
         gameRunning=true;
     }
 
-    public Block generateNextBlock(GameField gameField){
+    public Piece generateNextBlock(Board board){
         if (!gameRunning){
             throw new IllegalStateException("The game is stopped.");
         }
@@ -40,11 +40,11 @@ public class TetrisGame {
         int nr=generator.nextInt(NUMBER_OF_BLOCKS);
 
         if	(nr< STRAIGHT_BLOCK_NR)
-            return new Block(gameField,nr);
+            return new BasePiece(board,nr);
         else if (nr==5)
-            return new StraightBlock(gameField,nr);
+            return new IPiece(board,nr);
         else
-            return new SquareBlock(gameField,nr);
+            return new OPiece(board,nr);
     }
 
     public int getDelay(){

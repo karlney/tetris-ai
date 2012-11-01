@@ -176,21 +176,21 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
         try{
             g.setColor(new	Color(0,0,0));
             g.fillRect(0,0,XSIZE,YSIZE);
-            player.gameField.draw(g);
-            player.currentBlock.draw(g);
+            player.board.draw(g);
+            player.currentPiece.draw(g);
 
             g.setColor(Color.RED);
             g.drawString("Score",XSIZE-100,50);
-            g.drawString(""+player.currentBlock.y,XSIZE-100,80);
+            g.drawString(""+player.currentPiece.y,XSIZE-100,80);
             g.drawString("Rows",	XSIZE-100,110);
-            g.drawString(""+player.currentBlock.x,XSIZE-100,140);
+            g.drawString(""+player.currentPiece.x,XSIZE-100,140);
             g.drawString("Level", XSIZE-100,170);
             g.drawString(""+level,XSIZE-100,200);
 
-            if(player.nextBlock.number==6){
-                player.nextBlock.draw(g,	XSIZE-80, 250);
+            if(player.nextPiece.number==6){
+                player.nextPiece.draw(g,	XSIZE-80, 250);
             }
-            else player.nextBlock.draw(g, XSIZE-100, 250);
+            else player.nextPiece.draw(g, XSIZE-100, 250);
 
             if(!gameRunning){	//If games is quit then display GAME OVER
                 Font f=g.getFont();

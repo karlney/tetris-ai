@@ -6,11 +6,11 @@ import java.awt.event.KeyEvent;
 
 public class  TetrisPlayer{
 
-    public GameField gameField;
+    public Board board;
     public GameController gc;
     public MoveDownThread t;
 
-    public Block  currentBlock,nextBlock;
+    public BasePiece currentPiece, nextPiece;
 
     public int    score=0,
             rowCounter = 0;
@@ -23,10 +23,10 @@ public class  TetrisPlayer{
     public void	newGame(){
         score=0;
         rowCounter=0;
-        gameField=new GameField();
+        board =new Board();
 
-        nextBlock=gc.generateNextBlock(gameField);
-        currentBlock=gc.generateNextBlock(gameField);
+        nextPiece =gc.generateNextBlock(board);
+        currentPiece =gc.generateNextBlock(board);
         if	(t!=null) {
             t.stop();
         }
@@ -36,7 +36,7 @@ public class  TetrisPlayer{
 
 
     public void	moveDown(){
-        currentBlock.moveDown(this);
+        currentPiece.moveDown(this);
     }
 
     public void	setDelay(){
@@ -60,8 +60,8 @@ public class  TetrisPlayer{
     }
 
 
-    public void	newBlock(Block	s){
-        int rows=gameField.checkRemoved(s);
+    public void	newBlock(BasePiece s){
+        int rows= board.checkRemoved(s);
         if	(rows==-1){
             t.stop();
             //Highscore.updateScore(score);     SE till att fixa!!!!!!!!!!!
@@ -69,8 +69,8 @@ public class  TetrisPlayer{
         }
         else{
             updateScores(rows);
-            currentBlock=nextBlock;
-            nextBlock=gc.generateNextBlock(gameField);
+            currentPiece = nextPiece;
+            nextPiece =gc.generateNextBlock(board);
             t.setDelay(gc.getDelay());
         }
     }
@@ -80,20 +80,20 @@ public class  TetrisPlayer{
     //TODO this should be refactored out    Aw
     public void processKeyInput(KeyEvent e2){
         if((e2.getKeyCode() == KeyEvent.VK_UP || e2.getKeyCode()	==	KeyEvent.VK_W))
-            currentBlock.rotate();
+            currentPiece.rotateIfPossible();
 
         if((e2.getKeyCode() == KeyEvent.VK_DOWN || e2.getKeyCode() == KeyEvent.VK_S))
             t.speedUp();
 
 
         if((e2.getKeyCode() == KeyEvent.VK_LEFT || e2.getKeyCode() == KeyEvent.VK_A))
-            currentBlock.moveSideWays(Block.LEFT);
+            currentPiece.moveSideWays(BasePiece.LEFT);
 
         if((e2.getKeyCode() == KeyEvent.VK_RIGHT || e2.getKeyCode()	==	KeyEvent.VK_D))
-            currentBlock.moveSideWays(Block.RIGHT);
+            currentPiece.moveSideWays(BasePiece.RIGHT);
 
         if(e2.getKeyCode() == KeyEvent.VK_SPACE ){
-            currentBlock.fallDown();
+            currentPiece.fallDown();
             t.setDelay(10);
         }
     }
