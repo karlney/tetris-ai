@@ -1,4 +1,6 @@
-package se.karney.tetris;
+package karlney.tetris.core;
+
+import karlney.tetris.GameController;
 
 public class AIplayer extends TetrisPlayer implements Runnable{
 

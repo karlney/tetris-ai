@@ -1,4 +1,4 @@
-package se.karney.tetris;
+package karlney.tetris;
 
 public class Tetris{
 

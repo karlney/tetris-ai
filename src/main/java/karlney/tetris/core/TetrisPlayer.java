@@ -1,4 +1,9 @@
-package se.karney.tetris;
+package karlney.tetris.core;
+
+import karlney.tetris.GameController;
+import karlney.tetris.MoveDownThread;
+import karlney.tetris.core.Block;
+import karlney.tetris.core.GameField;
 
 import java.awt.event.KeyEvent;
 
@@ -75,7 +80,7 @@ public class  TetrisPlayer{
 
 
 
-
+    //TODO this should be refactored out    Aw
     public void processKeyInput(KeyEvent e2){
         if((e2.getKeyCode() == KeyEvent.VK_UP || e2.getKeyCode()	==	KeyEvent.VK_W))
             currentBlock.rotate();
