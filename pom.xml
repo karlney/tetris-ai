@@ -1,18 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>se.karney.tetris</groupId>
-    <artifactId>tetris</artifactId>
+    <groupId>karlney.tetris-ai</groupId>
+    <artifactId>tetris-game</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>tetris</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/karlney/tetris-ai</url>
 
     <properties>
-        <!-- These 3 properties are used by the final profile and the info.jsp file-->
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
-        <buildNumber>LOCAL_BUILD</buildNumber>
     </properties>
 
     <dependencies>
@@ -51,22 +49,12 @@
 
     </build>
 
-    <profiles>
- 
-    </profiles>
 
-    <scm>
-    </scm>
+	<scm>
+		<url>https://github.com/karlney/tetris-ai</url>
+		<connection>scm:git:git://github.com/karlney/tetris-ai.git</connection>
+		<developerConnection>scm:git:git@github.com/karlney/tetris-ai.git</developerConnection>
+	</scm>
 
-    <distributionManagement>
-        <repository>
-            <id>fw-releases</id>
-            <url>https://mvn.findwise.se/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>fw-snapshots</id>
-            <url>https://mvn.findwise.se/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>
