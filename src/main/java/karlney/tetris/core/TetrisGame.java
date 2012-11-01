@@ -16,9 +16,6 @@ public class TetrisGame {
     private static final int MAX_LEVEL = 10; //level 10 is only for AI training
     private static final int[] LEVEL_DELAYS = {500,450,400,350,300,250,200,150,100,50,0};
 
-    //False when the game is lost/stopped
-    private boolean	gameRunning;
-
     //True when the game is started (False only if the game is created but not yet started)
     private boolean gameStarted;
 
@@ -39,7 +36,6 @@ public class TetrisGame {
 
     public void start(){
         if (!gameStarted){
-            gameRunning = true;
             gameStarted = true;
             for (TetrisPlayer pl:players) {
                 pl.start(getDelay());
@@ -48,11 +44,8 @@ public class TetrisGame {
     }
 
     public void stop(){
-        if (gameRunning){
-            gameRunning=false;
-            for (TetrisPlayer pl:players) {
-                pl.stop();
-            }
+        for (TetrisPlayer pl:players) {
+            pl.stop();
         }
     }
 
@@ -90,5 +83,15 @@ public class TetrisGame {
         return paused;
     }
 
+    public List<TetrisPlayer> getPlayers() {
+        return players;
+    }
 
+    public boolean hasEnded() {
+        boolean allStopped = true;
+        for (TetrisPlayer pl:players){
+            allStopped = allStopped && !pl.isRunning();
+        }
+        return allStopped;
+    }
 }

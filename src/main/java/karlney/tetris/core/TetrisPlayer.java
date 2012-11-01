@@ -77,6 +77,7 @@ public class  TetrisPlayer implements Runnable{
 
     public void updatePlaceScore(int removedRows){
         //TODO add score for placing piece
+        score=score+(level+1)*1;
 
         //TODO add score for removing rows
         if	(removedRows==1)
@@ -92,7 +93,7 @@ public class  TetrisPlayer implements Runnable{
     }
 
     private void updateFallScore(int fallDownRows) {
-       score=score+(level+1)*5;
+        score=score+(level+1)*5;
     }
 
     public void	newBlock(Piece piece){
@@ -127,6 +128,9 @@ public class  TetrisPlayer implements Runnable{
         }
     }
 
+    public boolean isRunning() {
+        return running;
+    }
 
     public void run(){
         while (running){
@@ -137,4 +141,15 @@ public class  TetrisPlayer implements Runnable{
         }
     }
 
+    public Piece getNextPiece() {
+        return nextPiece;
+    }
+
+    public Piece getCurrentPiece() {
+        return currentPiece;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
 }

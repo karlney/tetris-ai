@@ -9,13 +9,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * This is the main Game class
  * It uses Java swing for drawing the game frame, menues etc.
  */
-public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionListener{
+public class SwingGame extends JPanel implements Runnable,KeyListener,ActionListener{
 
     //Size in pixels of graphical elements
     private final static int
@@ -24,7 +23,8 @@ public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionList
             LOCATION_X = 200,
             LOCATION_Y = 100;
 
-    private static final int DEFAULT_START_LEVEL = 5;
+    private static final int DEFAULT_START_LEVEL = 1;
+    private static final int SQUARE_SIZE = 20;
     private static final int ROWS = 20;
     private static final int COLS = 10;
 
@@ -49,6 +49,7 @@ public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionList
 
     public SwingGame(){
         initGraphics();
+        new Thread(this).start();
         newGame();
     }
 
@@ -98,7 +99,10 @@ public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionList
      * Tis method starts a new game
      */
     private void newGame() {
-        game = new TetrisGame(level,Arrays.asList(new TetrisPlayer(new Board(),generator)));
+        if (game!=null){
+            game.stop();
+        }
+        game = new TetrisGame(level,Arrays.asList(new TetrisPlayer(new Board(),generator,level)));
         game.start();
     }
 
@@ -137,28 +141,24 @@ public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionList
         if	((e2.getKeyCode()	==	KeyEvent.VK_N)	&&	(e2.isControlDown() || e2.isMetaDown()) ){
             newGame();
         }
-
-
     }
-
 
     public void processKeyInput(KeyEvent e2){
         if((e2.getKeyCode() == KeyEvent.VK_UP || e2.getKeyCode()	==	KeyEvent.VK_W))
-            currentPiece.rotateIfPossible();
+            game.getPlayers().get(0).processInput(TetrisInput.ROTATE);
 
         if((e2.getKeyCode() == KeyEvent.VK_DOWN || e2.getKeyCode() == KeyEvent.VK_S))
-            t.speedUp();
+            game.getPlayers().get(0).processInput(TetrisInput.DOWN);
 
 
         if((e2.getKeyCode() == KeyEvent.VK_LEFT || e2.getKeyCode() == KeyEvent.VK_A))
-            currentPiece.moveSideWays(PieceBase.LEFT);
+            game.getPlayers().get(0).processInput(TetrisInput.LEFT);
 
         if((e2.getKeyCode() == KeyEvent.VK_RIGHT || e2.getKeyCode()	==	KeyEvent.VK_D))
-            currentPiece.moveSideWays(PieceBase.RIGHT);
+            game.getPlayers().get(0).processInput(TetrisInput.RIGHT);
 
         if(e2.getKeyCode() == KeyEvent.VK_SPACE ){
-            currentPiece.fallDown();
-            t.setDelay(10);
+            game.getPlayers().get(0).processInput(TetrisInput.DROP);
         }
     }
 
@@ -174,22 +174,18 @@ public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionList
         }
 
         if	(e.getSource()==pauseCmd){
-            pauseGame();
+            game.togglePause();
         }
         if(e.getSource()==newGameCmd){
-            newGame(level);
+            newGame();
         }
 
         if(e.getSource()==nextLvlCmd){
-            level++;
-            if	(level>= MAX_LEVEL)	level= MAX_LEVEL;
-            getDelay();
+            game.increaseLevel();
         }
 
         if(e.getSource()==prevLvlCmd){
-            level--;
-            if	(level<0) level=0;
-            getDelay();
+            game.decreaseLevel();
         }
 
         if(e.getSource()==showHighscoreCmd){
@@ -207,47 +203,129 @@ public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionList
         try{
             g.setColor(new	Color(0,0,0));
             g.fillRect(0,0,XSIZE,YSIZE);
-            player.board.draw(g);
-            player.currentPiece.draw(g);
 
-            g.setColor(Color.RED);
-            g.drawString("Score",XSIZE-100,50);
-            g.drawString(""+player.currentPiece.y,XSIZE-100,80);
-            g.drawString("Rows",	XSIZE-100,110);
-            g.drawString(""+player.currentPiece.x,XSIZE-100,140);
-            g.drawString("Level", XSIZE-100,170);
-            g.drawString(""+level,XSIZE-100,200);
+            for (TetrisPlayer player: game.getPlayers()) {
+                drawBoard(g, player.getBoard());
+                drawPiece(player.getCurrentPiece(), g, 0, 0);
 
-            if(player.nextPiece.number==6){
-                player.nextPiece.draw(g,	XSIZE-80, 250);
-            }
-            else player.nextPiece.draw(g, XSIZE-100, 250);
+                g.setColor(Color.RED);
+                g.drawString("Score",XSIZE-100,50);
+                g.drawString(""+player.currentPiece.getY(),XSIZE-100,80);
+                g.drawString("Rows",	XSIZE-100,110);
+                g.drawString(""+player.currentPiece.getX(),XSIZE-100,140);
+                g.drawString("Level", XSIZE-100,170);
+                g.drawString(""+level,XSIZE-100,200);
 
-            if(!gameRunning){	//If games is quit then display GAME OVER
-                Font f=g.getFont();
-                g.setFont(new Font("Georgia",	Font.BOLD, 50));
-                g.setColor(Color.WHITE);
-                g.drawString("GAME OVER",20,150);
+                drawNextPiece(g, player.getNextPiece());
 
-                g.setFont(new Font("Georgia",	Font.BOLD, 30));
-                //g.setColor(Color.YELLOW);
-                g.drawString("Final score",100,200);
-                g.drawString(""+player.score,130,250);
+                if(game.hasEnded()){	//If games is quit then display GAME OVER
+                    Font f=g.getFont();
+                    g.setFont(new Font("Georgia",	Font.BOLD, 50));
+                    g.setColor(Color.WHITE);
+                    g.drawString("GAME OVER",20,150);
 
-                g.setFont(f);
-            }
+                    g.setFont(new Font("Georgia",	Font.BOLD, 30));
+                    //g.setColor(Color.YELLOW);
+                    g.drawString("Final score",100,200);
+                    g.drawString(""+player.score,130,250);
 
-            if(paused){	//	//If games is paused then display Paused
-                Font f=g.getFont();
-                g.setFont(new Font("Arial", Font.BOLD,	30));
-                g.setColor(Color.WHITE);
-                g.drawString("Paused",60,150);
-                g.setFont(f);
+                    g.setFont(f);
+                }
+
+                if(game.isPaused()){	//	//If games is paused then display Paused
+                    Font f=g.getFont();
+                    g.setFont(new Font("Arial", Font.BOLD,	30));
+                    g.setColor(Color.WHITE);
+                    g.drawString("Paused",60,150);
+                    g.setFont(f);
+                }
             }
         }
         catch(Exception e){}
 
     }
+
+    private void drawPiece(Piece piece, Graphics g, int Xoff, int Yoff) {
+       for(int j=0; j<piece.getSize(); j++){
+            for(int i=0; i<piece.getSize(); i++){
+                drawSquare(piece.getSquare(i,j),g,Xoff+piece.getX()*SQUARE_SIZE+SQUARE_SIZE*i,Yoff+piece.getY()*SQUARE_SIZE+SQUARE_SIZE*j);
+            }
+        }
+    }
+
+    private void drawBoard(Graphics g, Board board) {
+        for(int j=0; j<22; j++){
+            for(int i=0; i<12; i++){
+                drawSquare(board.getSquare(i, j),g,SQUARE_SIZE*i,SQUARE_SIZE*j);
+            }
+        }
+    }
+
+    private void drawNextPiece(Graphics g, Piece nextPiece) {
+        if(nextPiece instanceof PieceO){
+            drawPiece(nextPiece, g, XSIZE - 80, 250);
+        } else {
+            drawPiece(nextPiece, g, XSIZE - 100, 250);
+        }
+    }
+
+    public static final Color
+            c1=new Color(250,250,0),//Yellow
+            c2=new Color(0,200,0), //Green
+            c3=new Color(250,150,150), //Teal
+            c4=new Color(0,150,220), // Pink
+            c5=new Color(250,0,0), //Red
+            c6=new Color(250,250,250), //White
+            c7=new Color(0,120,90), //Dark green
+            c8=new Color(100,0,100), // Purple
+            c9=new Color(0,250,250); //Blue
+
+    public void drawSquare(Square square, Graphics g,int x, int y){
+        if(square.isFilled()){
+            g.setColor(getColors(square.getType().getValue())[0]);
+            g.fillRect(x,y,SQUARE_SIZE,SQUARE_SIZE);
+            g.setColor(getColors(square.getType().getValue())[1]);
+            g.fillRect(x+3,y+3,SQUARE_SIZE-6,SQUARE_SIZE-6);
+        }
+    }
+
+    public Color[] getColors(int nr){
+        Color[] cOut= new Color[2];
+        if(nr==1) {
+            cOut[0]=c7;
+            cOut[1]=c3;
+        }
+        if(nr==2) {
+            cOut[0]=c7;
+            cOut[1]=c6;
+        }
+        if(nr==3) {
+            cOut[0]=c7;
+            cOut[1]=c1;
+        }
+        if(nr==4) {
+            cOut[0]=c7;
+            cOut[1]=c9;
+        }
+        if(nr==5) {
+            cOut[0]=c7;
+            cOut[1]=c5;
+        }
+        if(nr==6){
+            cOut[0]=c7;
+            cOut[1]=c8;
+        }
+        if(nr==7) {
+            cOut[0]=c7; //Frame
+            cOut[1]=c2; //Internal
+        }
+        if(nr==10) { //Game frame
+            cOut[0]=c4;
+            cOut[1]=c4;
+        }
+        return cOut;
+    }
+
 
 
     //Infinite rendering loop, can only be stopped by system exit

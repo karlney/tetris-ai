@@ -40,16 +40,6 @@ public class Board {
         board[i][j]=s;
     }
 
-    /*
-    public void draw(Graphics g){
-        for(int j=0; j<22; j++){
-            for(int i=0; i<12; i++){
-                board[i][j].draw(g,BLOCKSIZE*i,BLOCKSIZE*j);
-            }
-        }
-    }
-    */
-
 
     /**
      * This method first place the piece on the board
@@ -115,26 +105,6 @@ public class Board {
             }
         }
     }
-
-
-
-
-    /*Backup Functions */
-    /*
-    public void createBackup(){
-        backUp= new Square[cols +2][rows +2];
-        for(int i=0; i< cols +2; i++){
-            for(int j=0; j< rows +2; j++){
-                backUp[i][j]=new Square(board[i][j]);
-            }
-        }
-    }
-
-    public void retriveBackup(){
-        board =backUp;
-        backUp=null;
-    }
-    */
 
 
     /* ****AI planning methods*****  */
@@ -332,5 +302,9 @@ public class Board {
     //TODO, this needs to be implemented
     public int getRowsToFall(PieceBase basePiece) {
         return 0;
+    }
+
+    public Square getSquare(int col, int row) {
+        return board[col][row];
     }
 }

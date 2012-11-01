@@ -32,7 +32,7 @@ public class PieceGenerator {
 
 
     private Square[][] buildShape(PieceType type) {
-        boolean[][] bools = PIECE_INITS[type.getValue()];
+        boolean[][] bools = PIECE_INITS[type.getValue()-1];
         Square[][] out = new Square[bools.length][bools.length];
         for (int i=0;i<bools.length;i++){
             for (int j=0;j<bools[i].length;j++){
