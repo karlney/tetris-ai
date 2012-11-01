@@ -1,0 +1,9 @@
+* Go through current code
+** add comments, javadoc
+** add refactoring placeholder comments
+** make it compile (without AI)
+** make it run (without AI)
+** make it run (wit AI)
+
+
+* Start working on EA engine
