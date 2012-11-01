@@ -1,17 +1,16 @@
-package karlney.tetris;
+package karlney.tetris.core;
 
 import karlney.tetris.core.TetrisPlayer;
 
-public class MoveDownThread implements Runnable{
+public class MoveDownThread implements Runnable {
 
     public int delay;
+    private Thread t = new Thread(this);
+    private TetrisPlayer player;
+    private boolean running=true;
 
-    Thread t = new Thread(this);
-    TetrisPlayer gc;
-    boolean running=true;
-
-    public MoveDownThread(TetrisPlayer g){
-        gc=g;
+    public MoveDownThread(TetrisPlayer player){
+        this.player = player;
         t.start();
     }
 
@@ -26,9 +25,10 @@ public class MoveDownThread implements Runnable{
             try {
                 Thread.sleep(delay);
             }catch(InterruptedException e) {}
-            gc.moveDown();
+            player.moveDown();
         }
     }
+
     public void stop(){
         running=false;
     }

@@ -1,9 +1,6 @@
 package karlney.tetris.core;
 
 import karlney.tetris.GameController;
-import karlney.tetris.MoveDownThread;
-import karlney.tetris.core.Block;
-import karlney.tetris.core.GameField;
 
 import java.awt.event.KeyEvent;
 

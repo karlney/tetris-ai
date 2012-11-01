@@ -1,7 +1,5 @@
 package karlney.tetris.core;
 
-import karlney.tetris.GameController;
-
 public class StraightBlock extends Block {
 
     private boolean tilted=true;
@@ -9,7 +7,7 @@ public class StraightBlock extends Block {
     protected StraightBlock(){
     }
 
-    public StraightBlock(GameField gf,GameController gc, int blockNumber){
+    public StraightBlock(GameField gf, int blockNumber){
         size=4;
         y=-2;
         shape = new Square[4][4];
@@ -31,14 +29,14 @@ public class StraightBlock extends Block {
 
 
     public void rotate(int dir){ // Rotation
-        if(checkMove(x,y,rotateTry())) {
-            shape=rotateTry();
+        if(checkMove(x,y, getRotatedShape())) {
+            shape= getRotatedShape();
             tilted=!tilted;
         }
     }
 
 
-    public Square[][] rotateTry(){ //Testar om rotation �r m�jlig
+    public Square[][] getRotatedShape(){ //Testar om rotation �r m�jlig
         Square[][] sh= new Square[4][4];
 
         for (int i=0; i<4;i++)

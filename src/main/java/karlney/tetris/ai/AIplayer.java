@@ -1,6 +1,10 @@
-package karlney.tetris.core;
+package karlney.tetris.ai;
 
 import karlney.tetris.GameController;
+import karlney.tetris.core.Block;
+import karlney.tetris.core.GameField;
+import karlney.tetris.core.Square;
+import karlney.tetris.core.TetrisPlayer;
 
 public class AIplayer extends TetrisPlayer implements Runnable{
 
@@ -40,7 +44,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
         for (int h=0; h<4; h++){
             for (int x=0; x<gameField.COL+1; x++){
                 tb =currentBlock.copy();
-                tb.setXY(x,y,h,gameField);
+                tb.overrideValues(x, y, h, gameField);
                 tb.stepDownAFAP();
 
                 for (int k=-1; k<=1; k++) {

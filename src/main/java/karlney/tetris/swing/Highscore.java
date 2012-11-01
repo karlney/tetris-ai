@@ -1,4 +1,4 @@
-package karlney.tetris.game;
+package karlney.tetris.swing;
 
 import javax.swing.*;
 import java.io.*;

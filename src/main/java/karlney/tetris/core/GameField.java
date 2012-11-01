@@ -1,12 +1,16 @@
 package karlney.tetris.core;
 
+import karlney.tetris.Tetris;
+
 import java.awt.*;
 
 //TODO drawing and state needs to be separated!
 public class GameField{
 
     public static final int ROW=20, COL=10,BLOCKSIZE=20;
+
     public Square[][] gameField = new Square[COL+2][ROW+2];
+
     private Square[][] backUp;
 
     public GameField(boolean a){
@@ -286,4 +290,17 @@ public class GameField{
         return out;
     }
 
+    public boolean checkMove(int x, int y, Square[][] shape) {
+            for(int j=0; j<shape.length; j++){
+                for(int i=0; i<shape[0].length; i++){
+                    try{
+                        if(gameField[x+i][y+j].isFilled() && shape[i][j].isFilled())
+                            return false;
+                    }
+                    catch (Exception e) { }
+                }
+            }
+            return true;
+        }
+    }
 }

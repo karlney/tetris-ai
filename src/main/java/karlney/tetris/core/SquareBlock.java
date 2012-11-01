@@ -1,33 +1,12 @@
 package karlney.tetris.core;
 
-import karlney.tetris.GameController;
-
 public class SquareBlock extends Block {
 
-
-    protected SquareBlock(){
-    }
-
-    public SquareBlock(GameField gf,GameController gc, int blockNumber){
-        size=2;
-        shape = new Square[2][2];
-        x=5;
-        for (int i=0; i<2;i++)
-            for (int j=0; j<2;j++)
-                shape[i][j]=new Square(6,true);
-
-        number=blockNumber;
-        gameField=gf;
-    }
-
-    public SquareBlock(Block copy,GameField gf,int x, int y,int rot){  // Used For AI planning
-        super(copy,gf,x,y,rot);
-    }
 
     public void rotate(int dir){ // Rotation
     }
 
-    public Square[][] rotateTry(){
+    public Square[][] getRotatedShape(){
         return shape;
     }
 

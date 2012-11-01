@@ -1,72 +1,67 @@
 package karlney.tetris.core;
 
-import karlney.tetris.GameController;
+public class Block<T extends Square>{
 
-import java.awt.*;
+   /*
+    private static boolean[][][] BLOCK_SHAPES ={
+            {{false,true,false},  {true,true,false}, {false,true,false}},  // .:.
+            {{true,false,false},  {true,true,false}, {false,true,false}},  // .:´
+            {{false,true,false},  {true,true,false}, {true,false,false}},  // ´:.
+            {{false,false,false}, {true,true,true},  {true,false,false}},  // ``:
+            {{true,true},{true,true}},                                     // ::
 
-public class Block{
+            {{false,false,false}, {true,true,true},  {false,false,true}}}; // ..:
+     */
 
-    private static boolean[][][] n ={{{false,true,false},{true,true,false},{false,true,false}}, // .:.
-            {{true,false,false},{true,true,false},{false,true,false}}, //     .:´
-            {{false,true,false},{true,true,false},{true,false,false}}, // ´:.
-            {{false,false,false},{true,true,true},{true,false,false}}, //     ``:
-            {{false,false,false},{true,true,true},{false,false,true}}}; // ..:
-
-    public final static int LEFT=0,RIGHT=1;
-    public final static Color c1=new Color(250,250,0), // Färger för de olika blocken
-            c2=new Color(0,250,0),
-            c3=new Color(0,250,250),
-            c4=new Color(250,0,250),
-            c5=new Color(250,0,0);
+    private int number;
 
 
-    public Square[][] shape;
-    private boolean falling=false,firstTry=true;
-    public int x=4,y=-1,
-            size,
-            number;
+    protected static final int START_POS_X = 4;
+    protected static final int START_POS_Y = -1;
 
-    GameField gameField;
+
+    private T[][] shape;
+    private int size;
+
+    private boolean falling;
+    private boolean firstTry;
+    private int x;
+    private int y;
+
+    private GameField gameField;
+
 
     protected Block(){
     }
 
-
-    public Block(GameField gf,GameController gc,int nr){ // Konstruktor
-        size=3;
-        shape = new Square[3][3];
-
-        for (int i=0; i<3;i++)
-            for (int j=0; j<3;j++)
-                shape[i][j]=new Square(nr,n[nr][i][j]);
-
-        gameField=gf;
-        number=nr;
+    public Block(GameField gameField, T[][] shape){
+        this.gameField = gameField;
+        this.shape = shape;
+        this.size = shape.length;
+        x= START_POS_X;
+        y= START_POS_Y;
+        falling=false;
+        firstTry=true;
     }
 
-    public void draw(Graphics g){ // Ritar ut
-        for(int j=0; j<size; j++){
-            for(int i=0; i<size; i++){
-                shape[i][j].draw(g,x*20+20*i,y*20+20*j);
-            }
-        }
-    }
-    public void draw(Graphics g,int x,int y){
-        for(int j=0; j<size; j++){
-            for(int i=0; i<size; i++){
-                shape[i][j].draw(g,x+20*i,y+20*j);
-            }
-        }
+    /**
+     * If possible rotate this block
+     */
+    public void rotate(){
+        if(gameField.checkMove(x,y,getRotatedShape()))
+            shape= getRotatedShape();
     }
 
 
-    public void rotate(){ // Rotation
-        if(checkMove(x,y,rotateTry()))
-            shape=rotateTry();
+    public void rotateNoCheck(){
+        shape= getRotatedShape();
     }
 
-    public Square[][] rotateTry(){ //Testar om rotation är möjlig
-        Square[][] shapeClone= new Square[3][3];
+    /**
+     * @return the shape matrix for this block rotated 90 degrees
+     */
+    public T[][] getRotatedShape(){
+        T[][] shapeClone= shape[0][0].getClone(size);
         for(int x=0; x<size; x++){
             for(int y=0; y<size; y++){
                 shapeClone[x][y]=shape[y][2-x];
@@ -76,22 +71,9 @@ public class Block{
     }
 
 
-    public boolean checkMove(int x,int y,Square[][] shape){ //Testar om förflyttning är möjlig      
-        for(int j=0; j<size; j++){
-            for(int i=0; i<size; i++){
-                try{
-                    if(gameField.gameField[x+i][y+j].filled && shape[i][j].filled)
-                        return false;
-                }
-                catch (Exception e) { }
-            }
-        }
-        return true;
-    }
-
 
     public boolean stepDown(){
-        boolean out=checkMove(x,y+1,shape);
+        boolean out=gameField.checkMove(x,y+1,shape);
         if (out){
             y++;
         }
@@ -104,11 +86,13 @@ public class Block{
     }
 
 
-    public synchronized void moveDown(TetrisPlayer plr){// Förflyttning neråt
-        if (checkMove(x,y+1,shape)){
+    public synchronized void moveDown(TetrisPlayer plr){
+        if (gameField.checkMove(x,y+1,shape)){
             y=y+1;
-            if (falling)
-                plr.score+=(plr.gc.level+1)*2;
+            //TODO score should NOT be calculated by the block!
+            /* if (falling)
+            plr.score+=(plr.gc.level+1)*2;
+            */
         }
         else {
             if (firstTry){
@@ -121,16 +105,16 @@ public class Block{
         }
     }
 
-    public synchronized void moveSideWays(int dir){ // Förflyttning i sidled
+    public synchronized void moveSideWays(MoveDirection dir){
         if (falling)
             return;
-        if (dir==LEFT){
-            if (checkMove(x-1,y,shape)){
+        if (dir==MoveDirection.LEFT){
+            if (gameField.checkMove(x - 1, y, shape)){
                 x=x-1;
             }
         }
-        if (dir==RIGHT){
-            if (checkMove(x+1,y,shape)){
+        if (dir==MoveDirection.RIGHT){
+            if (gameField.checkMove(x + 1, y, shape)){
                 x=x+1;
             }
         }
@@ -141,13 +125,26 @@ public class Block{
         falling=true;
     }
 
-    public void setXY(int x,int y,int h,GameField gf){
+
+    /**
+     * This method can be used to move this block to a new arbitrary position and rotation and to a new GameField
+     *
+     * This is very useful for AI planning.
+     *
+     * NOTE this method does NOT check if the final position is valid!
+     *
+     * @param x the new x position
+     * @param y the new y position
+     * @param rotation the new rotation (relative to the current rotation), 0 means current rotation, 1 means to rotate one time, 2 two times etc.
+     * @param gameField the new game field that this block is placed in
+     */
+    public void overrideValues(int x, int y, int rotation, GameField gameField){
         this.x=x;
         this.y=y;
-        for (int i=0; i<h; i++){
-            rotate();
+        for (int i=0; i<rotation; i++){
+            rotateNoCheck();
         }
-        gameField=gf;
+        this.gameField=gameField;
     }
 
 
@@ -158,11 +155,10 @@ public class Block{
 
     public Object clone(){
         Block out=new Block();
-        out.shape=(Square[][])shape.clone();
+        out.shape=(T[][])shape.clone();
         out.x=x;
         out.y=y;
         out.size=size;
-        out.number=number;
         out. gameField= gameField;
         return out;
     }
@@ -172,4 +168,13 @@ public class Block{
         return s;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    /*
+    public boolean isFilled(int i, int j) {
+        return shape[i][j].isFilled();
+    }
+    */
 }

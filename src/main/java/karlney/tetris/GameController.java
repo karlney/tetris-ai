@@ -1,7 +1,7 @@
 package karlney.tetris;
 
 import karlney.tetris.core.*;
-import karlney.tetris.game.Highscore;
+import karlney.tetris.swing.Highscore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Random;
 
 /**
  * This is the main Game class
@@ -24,13 +23,9 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
             LOCATION_X = 200,
             LOCATION_Y = 100;
 
-    private final static int NUMBER_OF_BLOCKS = 7;
-    private final static int START_LEVEL = 4;
-
-    //Random generator for next blocks
-    private static Random generator = new Random();
-
-    //Swing Menu
+    //Swing Graphics
+    private JPanel obs=new	JPanel();
+    private JFrame jf= new	JFrame("Tetris");
     private JMenuItem
             exitCmd,
             newGameCmd,
@@ -41,23 +36,8 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
             prevLvlCmd;
 
 
-    //Swing Graphics
-    private JPanel obs=new	JPanel();
-    private JFrame jf= new	JFrame("Tetris");
-
-    //public TetrisPlayer player= new TetrisPlayer(this);
-    public AIplayer player= new AIplayer(this);
-
-    //false when the game is lost
-    private boolean	gameRunning=true;
-
-    //true when the game is paused
-    private boolean paused=false;
-
-    private int[]	levelDelay = {1000,800,600,450,350,250,180,120,80};
-
-    private int masterDelay = 800;
-    private int level=0;
+    public TetrisPlayer player= new TetrisPlayer(this);
+    //public AIplayer player= new AIplayer(this);
 
 
     public GameController(){
@@ -128,7 +108,7 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
         }
         if(e2.getKeyCode() == KeyEvent.VK_2){
             level++;
-            if	(level>=levelDelay.length)	level=levelDelay.length-1;
+            if	(level>= LEVEL_DELAYS.length)	level= LEVEL_DELAYS.length-1;
             getDelay();
         }
 
@@ -171,13 +151,12 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
 
         if(e.getSource()==nextLvlCmd){
             level++;
-            if	(level>=levelDelay.length)	level=levelDelay.length-1;
+            if	(level>= MAX_LEVEL)	level= MAX_LEVEL;
             getDelay();
         }
 
         if(e.getSource()==prevLvlCmd){
             level--;
-
             if	(level<0) level=0;
             getDelay();
         }
@@ -213,7 +192,7 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
             }
             else player.nextBlock.draw(g, XSIZE-100, 250);
 
-            if(!gameRunning){	//	Om	spelet �r avslutat
+            if(!gameRunning){	//If games is quit then display GAME OVER
                 Font f=g.getFont();
                 g.setFont(new Font("Georgia",	Font.BOLD, 50));
                 g.setColor(Color.WHITE);
@@ -227,7 +206,7 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
                 g.setFont(f);
             }
 
-            if(paused){	//	Om	spelet �r pausat
+            if(paused){	//	//If games is paused then display Paused
                 Font f=g.getFont();
                 g.setFont(new Font("Arial", Font.BOLD,	30));
                 g.setColor(Color.WHITE);
@@ -240,72 +219,17 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
     }
 
 
-    //Rendering Loop
-
+    //Infinite rendering loop, can only be stopped by system exit
     public void	run(){
         try {
-            while	(true){
+            while(true){
                 if (jf.isShowing())
                     repaint();
-                //render
                 Thread.sleep(10);
             }
 
         }
         catch(InterruptedException	e)	{}
     }
-
-
-    //Current Game	Related Code
-
-
-    public Block generateNextBlock(GameField gameField){
-        int nr=generator.nextInt(NUMBER_OF_BLOCKS);
-
-        if	(nr<5)
-            return new Block(gameField,this,nr);
-        else if (nr==5)
-            return new StraightBlock(gameField,this,nr);
-        else
-            return new SquareBlock(gameField,this,nr);
-    }
-
-
-    public int	getDelay(){
-        if	(!paused)	{
-            masterDelay=levelDelay[level];
-            return masterDelay;
-        }
-        return 1000000;
-    }
-
-
-    public void	newGame(int	lvl){
-        player.newGame();
-
-        level=lvl;
-        masterDelay=levelDelay[level];
-
-        paused=false;
-
-        new Thread(this).start();	  //Grafik Tr�d
-    }
-
-    public void	pauseGame(){
-        if	(paused){
-            paused=false;
-            player.t.setDelay(getDelay()) ;
-        }
-        else{
-            player.t.setDelay(1000000);
-            paused=true;
-        }
-    }
-
-
-    public void	gameOver(){
-        gameRunning=false;
-    }
-
 
 }
