@@ -1,7 +1,6 @@
-package karlney.tetris;
+package karlney.tetris.swing;
 
 import karlney.tetris.core.*;
-import karlney.tetris.swing.Highscore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This is the main Game class
  * It uses Java swing for drawing the game frame, menues etc.
  */
-public class GameController extends JPanel	implements Runnable,KeyListener,ActionListener{
+public class SwingGame extends JPanel	implements Runnable,KeyListener,ActionListener{
 
     //Size in pixels of graphical elements
     private final static int
@@ -22,6 +23,10 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
             YSIZE=400+90,
             LOCATION_X = 200,
             LOCATION_Y = 100;
+
+    private static final int DEFAULT_START_LEVEL = 5;
+    private static final int ROWS = 20;
+    private static final int COLS = 10;
 
     //Swing Graphics
     private JPanel obs=new	JPanel();
@@ -36,15 +41,20 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
             prevLvlCmd;
 
 
-    public TetrisPlayer player= new TetrisPlayer(this);
+    public TetrisGame game;
+    public int level = DEFAULT_START_LEVEL;
+    public PieceGenerator generator = new PieceGenerator();
+
     //public AIplayer player= new AIplayer(this);
 
+    public SwingGame(){
+        initGraphics();
+        newGame();
+    }
 
-    public GameController(){
-
-        //Init graphics
+    private void initGraphics() {
         jf.setResizable(false);
-        jf.setSize(new	Dimension(XSIZE,YSIZE));
+        jf.setSize(new Dimension(XSIZE,YSIZE));
         jf.setLocation(LOCATION_X,LOCATION_Y);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.addKeyListener(this);
@@ -53,9 +63,6 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
         c.add(this);
         buildMenu(jf);
         jf.setVisible(true);
-
-        //Init the game
-        newGame(START_LEVEL);
     }
 
 
@@ -84,9 +91,23 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
         jf.getJMenuBar().add(m1);
         jf.getJMenuBar().setBackground(new Color(0,0,0));
 
-
+        newGame();
     }
 
+    /**
+     * Tis method starts a new game
+     */
+    private void newGame() {
+        game = new TetrisGame(level,Arrays.asList(new TetrisPlayer(new Board(),generator)));
+        game.start();
+    }
+
+    /**
+     * This methods shuts down the JVM
+     */
+    public void	quitGame(){
+        System.exit(0);
+    }
 
     // User	Input
     public void	keyTyped(KeyEvent	e){}
@@ -98,39 +119,49 @@ public class GameController extends JPanel	implements Runnable,KeyListener,Actio
      * @param e2 key pressed event
      */
     public void	keyPressed(KeyEvent e2){
-        if (!paused)  player.processKeyInput(e2);
+        if (!game.isPaused())  processKeyInput(e2);
 
         if(e2.getKeyCode() == KeyEvent.VK_1){
-            level--;
-
-            if	(level<0) level=0;
-            getDelay();
+            game.decreaseLevel();
         }
         if(e2.getKeyCode() == KeyEvent.VK_2){
-            level++;
-            if	(level>= LEVEL_DELAYS.length)	level= LEVEL_DELAYS.length-1;
-            getDelay();
+            game.increaseLevel();
         }
 
         if	(e2.getKeyCode() == KeyEvent.VK_P){
-            pauseGame();
+            game.togglePause();
         }
         if	((e2.getKeyCode()	==	KeyEvent.VK_Q)	&&	(e2.isControlDown() || e2.isMetaDown()) ){
             quitGame();
         }
         if	((e2.getKeyCode()	==	KeyEvent.VK_N)	&&	(e2.isControlDown() || e2.isMetaDown()) ){
-            newGame(level);
+            newGame();
         }
 
 
     }
 
-    /**
-     * This methods shuts down the JVM
-     */
-    public void	quitGame(){
-        System.exit(0);
+
+    public void processKeyInput(KeyEvent e2){
+        if((e2.getKeyCode() == KeyEvent.VK_UP || e2.getKeyCode()	==	KeyEvent.VK_W))
+            currentPiece.rotateIfPossible();
+
+        if((e2.getKeyCode() == KeyEvent.VK_DOWN || e2.getKeyCode() == KeyEvent.VK_S))
+            t.speedUp();
+
+
+        if((e2.getKeyCode() == KeyEvent.VK_LEFT || e2.getKeyCode() == KeyEvent.VK_A))
+            currentPiece.moveSideWays(PieceBase.LEFT);
+
+        if((e2.getKeyCode() == KeyEvent.VK_RIGHT || e2.getKeyCode()	==	KeyEvent.VK_D))
+            currentPiece.moveSideWays(PieceBase.RIGHT);
+
+        if(e2.getKeyCode() == KeyEvent.VK_SPACE ){
+            currentPiece.fallDown();
+            t.setDelay(10);
+        }
     }
+
 
     /**
      * This method is called when the menu is used (or hot keys)

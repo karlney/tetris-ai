@@ -1,7 +1,5 @@
 package karlney.tetris.core;
 
-import java.awt.*;
-
 //TODO drawing and state needs to be separated!
 public class Board {
 
@@ -10,12 +8,16 @@ public class Board {
 
     public static final int DEFAULT_START_POS_X = 4;
     public static final int DEFAULT_START_POS_Y = -1;
+    public static final int UNABLE_TO_PLACE_PIECE = -1;
 
     private int rows;
     private int cols;
 
     private Square[][] board;
-    // private Square[][] backUp;
+
+    public Board(){
+        this(DEFAULT_COLS,DEFAULT_ROWS);
+    }
 
     public Board(int cols, int rows){
         board = new Square[cols +2][rows +2];
@@ -64,7 +66,7 @@ public class Board {
             }
         }
         catch(Exception e) {
-            return -1;
+            return UNABLE_TO_PLACE_PIECE;
         }
         return checkFullRow();
     }
@@ -308,18 +310,27 @@ public class Board {
         return true;
     }
 
-    //TODO
+    //TODO compensate for non 10 width
     public int getStartPosX(PieceType type) {
-        return DEFAULT_START_POS_X;
+        if (type == PieceType.O){
+            return DEFAULT_START_POS_X+1;
+        }else if (type == PieceType.I){
+            return DEFAULT_START_POS_X-1;
+        }else{
+            return DEFAULT_START_POS_X;
+        }
     }
 
-    //TODO
     public int getStartPosY(PieceType type) {
-        return DEFAULT_START_POS_Y;
+        if (type == PieceType.O){
+            return 0;
+        }else{
+            return DEFAULT_START_POS_Y;
+        }
     }
 
-    //TODO
-    public int getRowsToFall(BasePiece basePiece) {
+    //TODO, this needs to be implemented
+    public int getRowsToFall(PieceBase basePiece) {
         return 0;
     }
 }

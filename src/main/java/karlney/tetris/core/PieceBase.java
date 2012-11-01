@@ -1,22 +1,12 @@
 package karlney.tetris.core;
 
-public class BasePiece implements Piece {
-
-    private static boolean[][][] PIECE_INITS ={
-            {{true,true},{true,true}},                                     // O = 1
-            {{false,false,true,false},{false,false,true,false},{false,false,true,false},{false,false,true,false}}, // I = 2
-            {{true,false,false},  {true,true,false}, {false,true,false}},  // S = 3
-            {{false,true,false},  {true,true,false}, {true,false,false}},  // Z = 4
-            {{false,false,false}, {true,true,true},  {false,false,true}},  // L = 5
-            {{false,false,false}, {true,true,true},  {true,false,false}},  // J = 6
-            {{false,true,false},  {true,true,false}, {false,true,false}}}; // T = 7
-
+public class PieceBase implements Piece {
 
     protected final Board board;
 
     protected Square[][] piece;
     protected boolean falling;
-    protected boolean firstTry;
+    protected boolean firstTryUsed;
     protected int x;
     protected int y;
 
@@ -27,10 +17,10 @@ public class BasePiece implements Piece {
      * @param copy the old piece this new one is based upon
      * @param board the new board that this piece is placed in
      */
-    public BasePiece(BasePiece copy, Board board) {
+    public PieceBase(PieceBase copy, Board board) {
         this.piece = copy.piece.clone();
         this.falling = copy.falling;
-        this.firstTry = copy.firstTry;
+        this.firstTryUsed = copy.firstTryUsed;
         this.x = copy.x;
         this.y = copy.y;
         this.board = board;
@@ -42,11 +32,11 @@ public class BasePiece implements Piece {
      * @param type the piece type
      * @param board the new board that this piece is placed in
      */
-    public BasePiece(PieceType type, Board board){
+    public PieceBase(PieceType type, Board board, Square[][] piece){
         this.board = board;
         falling=false;
-        firstTry=true;
-        this.piece = initShape(type);
+        firstTryUsed =true;
+        this.piece = piece;
         x= board.getStartPosX(type);
         y= board.getStartPosY(type);
     }
@@ -63,7 +53,7 @@ public class BasePiece implements Piece {
      * @param rotation the new rotation (relative to the current rotation), 0 means current rotation, 1 means to rotate one time, 2 two times etc.
      * @param board the new board that this piece is placed in
      */
-    public BasePiece(BasePiece copy, int x, int y, int rotation, Board board){
+    public PieceBase(PieceBase copy, int x, int y, int rotation, Board board){
         this(copy,board);
         this.x=x;
         this.y=y;
@@ -72,16 +62,6 @@ public class BasePiece implements Piece {
         }
     }
 
-    private Square[][] initShape(PieceType type) {
-        boolean[][] bools = PIECE_INITS[type.getValue()];
-        Square[][] out = new Square[bools.length][bools.length];
-        for (int i=0;i<bools.length;i++){
-            for (int j=0;j<bools[i].length;j++){
-                out[i][j] = new Square(type,bools[i][j]);
-            }
-        }
-        return out;
-    }
 
     @Override
     public synchronized boolean rotateIfPossible(){
@@ -135,13 +115,13 @@ public class BasePiece implements Piece {
             return false;
         }
         else {
-            if (firstTry){
-                firstTry=!firstTry;
-                return false;
+            if (firstTryUsed){
+                firstTryUsed =!firstTryUsed;
+                return true;
             }
             else{
-                firstTry=true;
-                return true;
+                firstTryUsed =true;
+                return false;
             }
         }
     }
@@ -181,5 +161,24 @@ public class BasePiece implements Piece {
     public int getSize() {
         return piece.length;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public Square getSquare(int i, int j) {
+        return piece[i][j];
+    }
+
+    @Override
+    public boolean isFilled(int i, int j) {
+        return piece[i][j].isFilled();
+    }
+
 
 }

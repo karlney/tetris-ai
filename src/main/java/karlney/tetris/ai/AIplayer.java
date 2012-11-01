@@ -1,6 +1,6 @@
 package karlney.tetris.ai;
 
-import karlney.tetris.GameController;
+import karlney.tetris.swing.SwingGame;
 import karlney.tetris.core.*;
 
 public class AIplayer extends TetrisPlayer implements Runnable{
@@ -11,7 +11,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
 
     private Piece copyCurrentPiece;
 
-    public AIplayer(GameController gc){
+    public AIplayer(SwingGame gc){
         super(gc);
         AIt= new Thread(this);
     }
@@ -30,12 +30,12 @@ public class AIplayer extends TetrisPlayer implements Runnable{
             alla currentBlock => testBlock !!!!
 
         */
-    public BasePiece findBestPlacement(){
+    public PieceBase findBestPlacement(){
 
         double bestU=-10000;
         int y=0;
 
-        BasePiece tb,best=new BasePiece();
+        PieceBase tb,best=new PieceBase();
 
 
         for (int h=0; h<4; h++){
@@ -61,7 +61,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
 
 
 
-    public void plotMove(Board gf,BasePiece b){
+    public void plotMove(Board gf,PieceBase b){
 
         System.out.println("R="+gf.getFullRows());
         System.out.println("H="+gf.getNrHoles());
@@ -69,7 +69,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
         //System.out.println("F="+gf.getNearlyFullRows());
         double u=calcUtility(b);
         System.out.println("Utility="+u);
-        BasePiece bk= currentPiece.getCopy();
+        PieceBase bk= currentPiece.getCopy();
         currentPiece =b;
         try{
             Thread.sleep(500);
@@ -80,7 +80,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
     }
 
 
-    public double evalMove(BasePiece b){
+    public double evalMove(PieceBase b){
         if ( !board.allowedPlacement(b)) {
             return -10000;
         }
@@ -89,7 +89,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
     }
 
 
-    public double calcUtility(BasePiece b){
+    public double calcUtility(PieceBase b){
         board.createBackup();
         board.placeBlock(b);
         int R= board.checkFullRow();
@@ -104,9 +104,9 @@ public class AIplayer extends TetrisPlayer implements Runnable{
     public Board createTestArena(){
         Board gf=new Board();
         for (int i=1; i<=gf.DEFAULT_COLS; i++){
-            int ystart= gf.DEFAULT_ROWS -(int)Math.max(0,Math.round(4* GameController.generator.nextDouble()));
+            int ystart= gf.DEFAULT_ROWS -(int)Math.max(0,Math.round(4* SwingGame.generator.nextDouble()));
             for (int j=ystart;j<=gf.DEFAULT_ROWS; j++){
-                if (GameController.generator.nextDouble()<0.79)
+                if (SwingGame.generator.nextDouble()<0.79)
                     gf.addSquare(i,j,new Square(10,true));
             }
         }
@@ -120,7 +120,7 @@ public class AIplayer extends TetrisPlayer implements Runnable{
             while	(true){
                 //gameField=createTestArena();
                 Thread.sleep(50);
-                BasePiece bestPiece = findBestPlacement();
+                PieceBase bestPiece = findBestPlacement();
                 board.checkRemoved(bestPiece);
                 currentPiece = nextPiece;
                 nextPiece =gc.generateNextBlock(board);

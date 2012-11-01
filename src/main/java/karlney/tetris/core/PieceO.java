@@ -1,16 +1,16 @@
 package karlney.tetris.core;
 
-public class OPiece extends BasePiece {
+public class PieceO extends PieceBase {
 
-    public OPiece(OPiece copy, Board board) {
+    public PieceO(PieceO copy, Board board) {
         super(copy, board);
     }
 
-    public OPiece(PieceType type, Board board) {
-        super(type, board);
+    public PieceO(PieceType type, Board board, Square[][] piece) {
+        super(type, board, piece);
     }
 
-    public OPiece(OPiece copy, int x, int y, int rotation, Board board) {
+    public PieceO(PieceO copy, int x, int y, int rotation, Board board) {
         super(copy, x, y, rotation, board);
     }
 

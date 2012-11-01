@@ -1,20 +1,20 @@
 package karlney.tetris.core;
 
-public class IPiece extends BasePiece {
+public class PieceI extends PieceBase {
 
     private boolean tilted;
 
-    public IPiece(IPiece copy, Board board) {
+    public PieceI(PieceI copy, Board board) {
         super(copy, board);
         this.tilted = copy.tilted;
     }
 
-    public IPiece(PieceType type, Board board) {
-        super(type, board);
+    public PieceI(PieceType type, Board board, Square[][] piece) {
+        super(type, board, piece);
         tilted=true;
     }
 
-    public IPiece(IPiece copy, int x, int y, int rotation, Board board) {
+    public PieceI(PieceI copy, int x, int y, int rotation, Board board) {
         super(copy, board);
         this.tilted = copy.tilted;
         this.x=x;

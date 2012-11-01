@@ -28,4 +28,16 @@ public enum PieceType {
         return value;
     }
 
+    public static PieceType valueOf(int nr) {
+        switch (nr){
+            case 0: return O;
+            case 1: return I;
+            case 2: return S;
+            case 3: return Z;
+            case 4: return L;
+            case 5: return J;
+            case 6: return T;
+            default: return BOARD;
+        }
+    }
 }
