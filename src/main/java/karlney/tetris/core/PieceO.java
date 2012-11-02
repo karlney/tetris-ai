@@ -1,21 +1,13 @@
 package karlney.tetris.core;
 
-public class PieceO extends PieceBase {
+public class PieceO extends AbstractPiece {
 
-    public PieceO(PieceO copy, Board board) {
-        super(copy, board);
-    }
-
-    public PieceO(PieceType type, Board board, Square[][] piece) {
-        super(type, board, piece);
+    public PieceO(int x, int y,  Board board, Square[][] piece) {
+        super(x,y,board,piece);
     }
 
     public PieceO(PieceO copy, int x, int y, int rotation, Board board) {
-        super(copy, x, y, rotation, board);
-    }
-
-    public Square[][] getRotatedShape(){
-        return piece;
+        super(copy,x,y,rotation,board);
     }
 
     @Override

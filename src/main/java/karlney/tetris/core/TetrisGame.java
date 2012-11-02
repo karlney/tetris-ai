@@ -13,8 +13,10 @@ import java.util.List;
 public class TetrisGame {
 
     // http://colinfahey.com/tetris/tetris.html
-    private static final int MAX_LEVEL = 10; //level 10 is only for AI training
-    private static final int[] LEVEL_DELAYS = {500,450,400,350,300,250,200,150,100,50,0};
+    private static final int MAX_LEVEL = 10; //level 11 is only for AI training
+    private static final int MIN_LEVEL = 1;  //level 0 is only for debugging
+
+    private static final int[] LEVEL_DELAYS = {1000000, 500,450,400,350,300,250,200,150,100,50,0};
 
     //True when the game is started (False only if the game is created but not yet started)
     private boolean gameStarted;
@@ -26,9 +28,9 @@ public class TetrisGame {
     private int level;
 
     //The players
-    private List<TetrisPlayer> players;
+    private List<Player> players;
 
-    public TetrisGame(int startLevel, List<TetrisPlayer> players) {
+    public TetrisGame(int startLevel, List<Player> players) {
         this.level = startLevel;
         this.players = players;
         this.gameStarted = false;
@@ -37,14 +39,14 @@ public class TetrisGame {
     public void start(){
         if (!gameStarted){
             gameStarted = true;
-            for (TetrisPlayer pl:players) {
+            for (Player pl:players) {
                 pl.start(getDelay());
             }
         }
     }
 
     public void stop(){
-        for (TetrisPlayer pl:players) {
+        for (Player pl:players) {
             pl.stop();
         }
     }
@@ -52,22 +54,22 @@ public class TetrisGame {
     public void increaseLevel(){
         level++;
         if	(level>= MAX_LEVEL)	level= MAX_LEVEL;
-        for (TetrisPlayer pl:players) {
+        for (Player pl:players) {
             pl.setDelay(getDelay());
         }
     }
 
     public void decreaseLevel(){
         level--;
-        if	(level<0) level=0;
-        for (TetrisPlayer pl:players) {
+        if	(level<MIN_LEVEL) level=MIN_LEVEL;
+        for (Player pl:players) {
             pl.setDelay(getDelay());
         }
     }
 
     public void togglePause(){
         paused = !paused;
-        for (TetrisPlayer pl:players) {
+        for (Player pl:players) {
             pl.setDelay(getDelay());
         }
     }
@@ -83,13 +85,13 @@ public class TetrisGame {
         return paused;
     }
 
-    public List<TetrisPlayer> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
     public boolean hasEnded() {
         boolean allStopped = true;
-        for (TetrisPlayer pl:players){
+        for (Player pl:players){
             allStopped = allStopped && !pl.isRunning();
         }
         return allStopped;

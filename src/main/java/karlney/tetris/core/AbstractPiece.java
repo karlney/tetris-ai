@@ -1,6 +1,6 @@
 package karlney.tetris.core;
 
-public class PieceBase implements Piece {
+public abstract class AbstractPiece implements Piece {
 
     protected final Board board;
 
@@ -12,33 +12,20 @@ public class PieceBase implements Piece {
 
 
     /**
-     * Copy constructor that clones the shape and assigns the piece to a given board
-     *
-     * @param copy the old piece this new one is based upon
-     * @param board the new board that this piece is placed in
-     */
-    public PieceBase(PieceBase copy, Board board) {
-        this.piece = copy.piece.clone();
-        this.falling = copy.falling;
-        this.firstTryUsed = copy.firstTryUsed;
-        this.x = copy.x;
-        this.y = copy.y;
-        this.board = board;
-    }
-
-    /**
      * Default constructor
      *
-     * @param type the piece type
+     * @param x start pos x
+     * @param y start pos y
      * @param board the new board that this piece is placed in
+     * @param piece the piece squares
      */
-    public PieceBase(PieceType type, Board board, Square[][] piece){
+    public AbstractPiece(int x, int y, Board board, Square[][] piece){
         this.board = board;
         falling=false;
         firstTryUsed =true;
         this.piece = piece;
-        x= board.getStartPosX(type);
-        y= board.getStartPosY(type);
+        this.x=x;
+        this.y=y;
     }
 
     /**
@@ -48,15 +35,13 @@ public class PieceBase implements Piece {
      * NOTE this method does NOT check if the final position is valid!
      *
      * @param copy the old piece this new one is based upon
-     * @param x the new x position
-     * @param y the new y position
+     * @param x the x position
+     * @param y the y position
      * @param rotation the new rotation (relative to the current rotation), 0 means current rotation, 1 means to rotate one time, 2 two times etc.
      * @param board the new board that this piece is placed in
      */
-    public PieceBase(PieceBase copy, int x, int y, int rotation, Board board){
-        this(copy,board);
-        this.x=x;
-        this.y=y;
+    public AbstractPiece(AbstractPiece copy, int x, int y, int rotation, Board board){
+        this(x,y,board,copy.piece.clone());
         for (int i=0; i<rotation; i++){
             rotateNoCheck();
         }
@@ -64,33 +49,11 @@ public class PieceBase implements Piece {
 
 
     @Override
-    public synchronized boolean rotateIfPossible(){
-        boolean out = board.checkMove(x,y,getRotatedShape());
-        if(out){
-            piece = getRotatedShape();
-        }
-        return out;
-
-    }
+    public abstract boolean rotateIfPossible();
 
 
     @Override
-    public void rotateNoCheck(){
-        piece = getRotatedShape();
-    }
-
-    /**
-     * @return the shape matrix for this block rotated 90 degrees
-     */
-    protected Square[][] getRotatedShape(){
-        Square[][] shapeClone= new Square[getSize()][getSize()];
-        for(int x=0; x<getSize(); x++){
-            for(int y=0; y<getSize(); y++){
-                shapeClone[x][y]= piece[y][2-x];
-            }
-        }
-        return shapeClone;
-    }
+    public abstract void rotateNoCheck();
 
 
     @Override
@@ -127,17 +90,17 @@ public class PieceBase implements Piece {
     }
 
     @Override
-    public synchronized boolean moveSideWays(MoveDirection dir){
+    public synchronized boolean moveSideWays(PlayerInput dir){
         if (falling) {
             return false;
         }
-        if (dir==MoveDirection.LEFT){
+        if (dir==PlayerInput.LEFT){
             if (board.checkMove(x - 1, y, piece)){
                 x=x-1;
                 return true;
             }
         }
-        if (dir==MoveDirection.RIGHT){
+        if (dir==PlayerInput.RIGHT){
             if (board.checkMove(x + 1, y, piece)){
                 x=x+1;
                 return true;
@@ -154,8 +117,7 @@ public class PieceBase implements Piece {
 
 
     public String toString(){
-        String s="shape="+this.piece[0][0].getType()+" x="+x+" y="+y+"\n";
-        return s;
+        return "shape="+this.piece[0][0].getType()+" x="+x+" y="+y+"\n";
     }
 
     public int getSize() {

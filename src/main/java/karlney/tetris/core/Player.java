@@ -1,6 +1,6 @@
 package karlney.tetris.core;
 
-public class  TetrisPlayer implements Runnable{
+public class Player implements Runnable{
 
     public final Board board;
     public final PieceGenerator generator;
@@ -16,7 +16,7 @@ public class  TetrisPlayer implements Runnable{
     public int level;
     private boolean running;
 
-    public TetrisPlayer(Board board, PieceGenerator generator, int level) {
+    public Player(Board board, PieceGenerator generator, int level) {
         this.board = board;
         this.generator = generator;
         this.level = level;
@@ -97,31 +97,28 @@ public class  TetrisPlayer implements Runnable{
     }
 
     public void	newBlock(Piece piece){
-        int rows= board.checkRemoved(piece);
-        if	(rows==Board.UNABLE_TO_PLACE_PIECE){
-            stop();
-        }
-        else{
+        try{
+            int rows= board.placePieceOnBoard(piece);
             updatePlaceScore(rows);
             currentPiece = nextPiece;
             nextPiece    = generator.getNextBlock(board);
+        }catch (UnableToPlacePieceException e) {
+            //TODO
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
-    public void processInput(TetrisInput input){
-        if(input == TetrisInput.ROTATE)
+    public void processInput(PlayerInput input){
+        if(input == PlayerInput.ROTATE)
             currentPiece.rotateIfPossible();
 
-        if(input == TetrisInput.DOWN)
+        if(input == PlayerInput.DOWN)
             t.interrupt();
 
-        if(input == TetrisInput.LEFT)
-            currentPiece.moveSideWays(MoveDirection.LEFT);
+        if(input == PlayerInput.LEFT || input == PlayerInput.RIGHT)
+            currentPiece.moveSideWays(input);
 
-        if(input == TetrisInput.RIGHT)
-            currentPiece.moveSideWays(MoveDirection.RIGHT);
-
-        if(input == TetrisInput.DROP ){
+        if(input == PlayerInput.DROP ){
             int fallDownRows = currentPiece.fallDown();
             updateFallScore(fallDownRows);
             setDelay(10);

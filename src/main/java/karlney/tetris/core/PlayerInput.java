@@ -8,6 +8,10 @@ package karlney.tetris.core;
  *
  * @author karl.neyvaldt
  */
-public enum TetrisInput {
-    DOWN, LEFT, RIGHT, DROP, ROTATE
+public enum PlayerInput {
+    DOWN,
+    LEFT,
+    RIGHT,
+    DROP,
+    ROTATE
 }

@@ -27,7 +27,7 @@ public interface Piece {
      * @param dir either left or right
      * @return true if the block was moved, false otherwise
      */
-    boolean moveSideWays(MoveDirection dir);
+    boolean moveSideWays(PlayerInput dir);
 
     /**
      * This method will move the piece down one row, or if the piece is in its lowest possible position (i.e it has hit the 'floor')

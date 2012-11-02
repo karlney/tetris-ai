@@ -121,7 +121,7 @@
 //                //gameField=createTestArena();
 //                Thread.sleep(50);
 //                PieceBase bestPiece = findBestPlacement();
-//                board.checkRemoved(bestPiece);
+//                board.placePieceOnBoard(bestPiece);
 //                currentPiece = nextPiece;
 //                nextPiece =gc.generateNextBlock(board);
 //            }

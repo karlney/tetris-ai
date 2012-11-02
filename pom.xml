@@ -16,6 +16,19 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.30</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -51,11 +64,11 @@
     </build>
 
 
-	<scm>
-		<url>https://github.com/karlney/tetris-ai</url>
-		<connection>scm:git:git://github.com/karlney/tetris-ai.git</connection>
-		<developerConnection>scm:git:git@github.com/karlney/tetris-ai.git</developerConnection>
-	</scm>
+    <scm>
+        <url>https://github.com/karlney/tetris-ai</url>
+        <connection>scm:git:git://github.com/karlney/tetris-ai.git</connection>
+        <developerConnection>scm:git:git@github.com/karlney/tetris-ai.git</developerConnection>
+    </scm>
 
 
 </project>

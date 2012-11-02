@@ -6,10 +6,6 @@ public class Board {
     public static final int DEFAULT_ROWS =20;
     public static final int DEFAULT_COLS =10;
 
-    public static final int DEFAULT_START_POS_X = 4;
-    public static final int DEFAULT_START_POS_Y = -1;
-    public static final int UNABLE_TO_PLACE_PIECE = -1;
-
     private int rows;
     private int cols;
 
@@ -19,11 +15,18 @@ public class Board {
         this(DEFAULT_COLS,DEFAULT_ROWS);
     }
 
+    /**
+     * TODO
+     * @param cols
+     * @param rows
+     */
     public Board(int cols, int rows){
+        this.cols = cols;
+        this.rows = rows;
         board = new Square[cols +2][rows +2];
 
         for (int i=0;i<cols+2;i++){
-            board[i][0]=new Square(PieceType.BOARD,false);
+            board[i][0]=new Square(PieceType.BOARD,true);
             board[i][rows+1]=new Square(PieceType.BOARD,true);
         }
         for (int i=0;i<rows+2;i++){
@@ -36,6 +39,12 @@ public class Board {
                 board[i][j]=new Square(PieceType.BOARD,false);
     }
 
+    /**
+     * TODO
+     * @param i
+     * @param j
+     * @param s
+     */
     public void addSquare(int i, int j, Square s){
         board[i][j]=s;
     }
@@ -44,21 +53,23 @@ public class Board {
     /**
      * This method first place the piece on the board
      * then checks if the newly placed piece completes one (or several) full row(s)
-     * if so the row(s) are removed and the number of removed rows is returned
+     * if so then the row(s) are removed and the number of removed rows is returned
+     * @param piece the piece that was just placed on the board
+     * @return the number of removed rows
+     * @throws UnableToPlacePieceException
      */
-    public int checkRemoved(Piece s){
-        try {
-            for(int i=0; i<s.getSize(); i++){
-                for(int j=0; j<s.getSize(); j++){
-                    if(s.isFilled(i, j))
-                        board[i+s.getX()][j+s.getY()]=s.getSquare(i,j);
+    public int placePieceOnBoard(Piece piece) throws UnableToPlacePieceException {
+        try{
+            for(int i=0; i<piece.getSize(); i++){
+                for(int j=0; j<piece.getSize(); j++){
+                    if(piece.isFilled(i, j))
+                        board[i+piece.getX()][j+piece.getY()]=piece.getSquare(i,j);
                 }
             }
+            return checkFullRow();
+        }catch (Exception e){
+            throw new UnableToPlacePieceException("The piece "+piece+" could not be placed on the board.");
         }
-        catch(Exception e) {
-            return UNABLE_TO_PLACE_PIECE;
-        }
-        return checkFullRow();
     }
 
 
@@ -90,7 +101,7 @@ public class Board {
     }
 
 
-    public void removeRow(int j){
+    private void removeRow(int j){
         for(int i=1; i<= cols; i++){
             board[i][j]=new Square(PieceType.BOARD,false);
         }
@@ -98,7 +109,7 @@ public class Board {
     }
 
 
-    public void moveDown(int row){
+    private void moveDown(int row){
         for(int j=row; j>1; j--){
             for(int i=1; i<11; i++){
                 board[i][j]= board[i][j-1];
@@ -117,8 +128,9 @@ public class Board {
                         return false;
                 }
             }
-        }
-        catch(Exception e) {
+        }catch(IndexOutOfBoundsException e) {
+            return false;
+        }catch (NullPointerException e){
             return false;
         }
         return true;
@@ -233,8 +245,9 @@ public class Board {
                         else{
                             board[i+s.getX()][j+s.getY()]= s.getSquare(i,j);
                         }
-                    }
-                    catch(Exception e) {
+                    }catch(IndexOutOfBoundsException e) {
+                        return false;
+                    }catch (NullPointerException e){
                         return false;
                     }
             }
@@ -280,31 +293,16 @@ public class Board {
         return true;
     }
 
-    //TODO compensate for non 10 width
-    public int getStartPosX(PieceType type) {
-        if (type == PieceType.O){
-            return DEFAULT_START_POS_X+1;
-        }else if (type == PieceType.I){
-            return DEFAULT_START_POS_X-1;
-        }else{
-            return DEFAULT_START_POS_X;
-        }
-    }
-
-    public int getStartPosY(PieceType type) {
-        if (type == PieceType.O){
-            return 0;
-        }else{
-            return DEFAULT_START_POS_Y;
-        }
-    }
-
     //TODO, this needs to be implemented
-    public int getRowsToFall(PieceBase basePiece) {
+    public int getRowsToFall(Piece piece) {
         return 0;
     }
 
     public Square getSquare(int col, int row) {
         return board[col][row];
+    }
+
+    public int getCols() {
+        return cols;
     }
 }
