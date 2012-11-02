@@ -23,7 +23,7 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             LOCATION_X = 200,
             LOCATION_Y = 100;
 
-    private static final int DEFAULT_START_LEVEL = 0;
+    private static final int DEFAULT_START_LEVEL = 1;
     private static final int SQUARE_SIZE = 20;
     private static final int ROWS = 20;
     private static final int COLS = 10;

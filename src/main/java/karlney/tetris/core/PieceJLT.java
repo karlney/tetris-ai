@@ -31,12 +31,31 @@ public class PieceJLT extends AbstractPiece {
      */
     private Square[][] getRotatedShape(){
         Square[][] shapeClone= new Square[getSize()][getSize()];
-        for(int x=0; x<getSize(); x++){
-            for(int y=0; y<getSize(); y++){
-                shapeClone[x][y]= piece[y][2-x];
+        for (int i=0; i<3;i++){
+            for(int x=0; x<getSize(); x++){
+                for(int y=0; y<getSize(); y++){
+                    shapeClone[x][y]= piece[y][2-x];
+                }
             }
         }
-        return shapeClone;
+        //The pieces needs to be rotated counter clockwise, therefore this is needed
+        Square[][] out= new Square[getSize()][getSize()];
+        for (int i=0; i<3;i++){
+            for(int x=0; x<getSize(); x++){
+                for(int y=0; y<getSize(); y++){
+                    out[x][y]= shapeClone[2-x][2-y];
+                }
+            }
+        }
+        return out;
     }
 
 }
+
+/*
+x,y   -> xp,yp
+2,2 -> 2,0
+1,1 -> 1,1
+1,2 -> 2,1
+0,0 -> 0,2
+*/
