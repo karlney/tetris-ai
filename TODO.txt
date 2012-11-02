@@ -1,19 +1,13 @@
 * Go through current code
-** add comments, javadoc
-** add refactoring placeholder comments
 
-** make it compile (without AI)
-** make it run (without AI)
+** add comments, javadoc - IN PROGRESS..
+** add refactoring placeholder comments - IN PROGRESS..
+** make it compile (without AI) - DONE
+** make it run (without AI)  - DONE
 
-BUGS:
+* score calculations
 
-Drop down always on
-
--------------------
-
-
-
-** make it run (wit AI)
+* make it run (wit AI)
 
 
 * Start working on EA engine

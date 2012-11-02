@@ -98,4 +98,8 @@ public class TetrisGame {
         }
         return allStopped;
     }
+
+    public int getLevel() {
+        return level;
+    }
 }

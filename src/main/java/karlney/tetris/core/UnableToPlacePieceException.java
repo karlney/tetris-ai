@@ -10,8 +10,8 @@ package karlney.tetris.core;
  */
 public class UnableToPlacePieceException extends RuntimeException {
 
-    public UnableToPlacePieceException(String msg) {
-        super(msg);
+    public UnableToPlacePieceException(String msg, Exception e) {
+        super(msg,e);
     }
 
 }

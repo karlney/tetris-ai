@@ -68,7 +68,7 @@ public class Board {
             }
             return checkFullRow();
         }catch (Exception e){
-            throw new UnableToPlacePieceException("The piece "+piece+" could not be placed on the board.");
+            throw new UnableToPlacePieceException("The piece "+piece+" could not be placed on the board.",e);
         }
     }
 

@@ -2,7 +2,7 @@ package karlney.tetris.core;
 
 public class Player implements Runnable{
 
-    private static final int FALLING_DELAY = 2;
+    private static final int FALLING_DELAY = 3;
 
     public final Board board;
     public final PieceGenerator generator;
@@ -13,6 +13,7 @@ public class Player implements Runnable{
 
     public int score=0;
     public int lines = 0;
+    public int freeFallIterations = 0;
 
     public int delay;
     public int level;
@@ -22,8 +23,9 @@ public class Player implements Runnable{
         this.board = board;
         this.generator = generator;
         this.level = level;
-        score=0;
+        score =0;
         lines =0;
+        freeFallIterations =0;
         currentPiece =generator.getNextBlock(board);
         nextPiece =generator.getNextBlock(board);
         running = false;
@@ -64,57 +66,20 @@ public class Player implements Runnable{
         this.level = level;
     }
 
-    /*
-    actualLevel   free-fall   instant-drop
-                points       points
-===========   =========   ============
-     1             6           24
-     2             9           27
-     3            12           30
-     4            15           33
-     5            18           36
-     6            21           39
-     7            24           42
-     8            27           45
-     9            30           48
-    10            33           51
-     */
 
     public void updatePlaceScore(int removedRows){
-        //TODO add score for placing piece
-        score=score+(level+1)*1;
+        score+= ((21+(3*level))-freeFallIterations+1);
 
-        //TODO add score for removing rows
         if	(removedRows==1)
-            score=score+(level+1)*50;
+            score=score+(level)*50;
         if	(removedRows==2)
-            score=score+(level+1)*150;
+            score=score+(level)*150;
         if	(removedRows==3)
-            score=score+(level+1)*300;
+            score=score+(level)*300;
         if	(removedRows==4)
-            score=score+(level+1)*1000;
+            score=score+(level)*1000;
 
         lines +=removedRows;
-    }
-
-    /*
-    actualLevel   free-fall   instant-drop
-                points       points
-===========   =========   ============
-     1             6           24
-     2             9           27
-     3            12           30
-     4            15           33
-     5            18           36
-     6            21           39
-     7            24           42
-     8            27           45
-     9            30           48
-    10            33           51
-     */
-    private void updateFallScore() {
-        //TODO ( (21 + (3 * actualLevel)) - freeFallIterations );
-        score=score+(level+1)*5;
     }
 
     private void newBlock(){
@@ -122,6 +87,7 @@ public class Player implements Runnable{
         updatePlaceScore(rows);
         currentPiece = nextPiece;
         nextPiece    = generator.getNextBlock(board);
+        freeFallIterations = 0;
     }
 
     public void processInput(PlayerInput input){
@@ -136,7 +102,6 @@ public class Player implements Runnable{
 
         if(input == PlayerInput.DROP ){
             currentPiece.fallDown();
-            updateFallScore();
             t.interrupt();
         }
     }
@@ -151,6 +116,7 @@ public class Player implements Runnable{
                 if (currentPiece.isFalling()){
                     Thread.sleep(FALLING_DELAY);
                 }else{
+                    freeFallIterations++;
                     Thread.sleep(delay);
                 }
             }catch(InterruptedException e) {}

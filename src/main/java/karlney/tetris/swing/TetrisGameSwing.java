@@ -42,7 +42,6 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
 
 
     public TetrisGame game;
-    public int level = DEFAULT_START_LEVEL;
     public PieceGenerator generator = new PieceGenerator();
 
     //public AIplayer player= new AIplayer(this);
@@ -99,8 +98,10 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
      * Tis method starts a new game
      */
     private void newGame() {
+        int level = DEFAULT_START_LEVEL;
         if (game!=null){
             game.stop();
+            level = game.getLevel();
         }
         game = new TetrisGame(level,Arrays.asList(new Player(new Board(),generator,level)));
         game.start();
@@ -214,7 +215,7 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
                 g.drawString("Lines",	XSIZE-100,110);
                 g.drawString(""+player.getLines(),XSIZE-100,140);
                 g.drawString("Level", XSIZE-100,170);
-                g.drawString(""+level,XSIZE-100,200);
+                g.drawString(""+game.getLevel(),XSIZE-100,200);
 
                 drawNextPiece(g, player.getNextPiece());
 
@@ -282,8 +283,8 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             c2=new Color(0,200,0), //Green
             c3=new Color(250,150,150), //Teal
             c4=new Color(0,150,220), // Pink
-            c5=new Color(250,0,0), //Red
-            c6=new Color(250,250,250), //White
+            c6=new Color(250,0,0), //Red
+            c5=new Color(250,250,250), //White
             c7=new Color(0,120,90), //Dark green
             c8=new Color(100,0,100), // Purple
             c9=new Color(0,250,250); //Blue
@@ -293,8 +294,11 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             g.setColor(getColors(square.getType().getValue())[0]);
             g.fillRect(x,y,SQUARE_SIZE,SQUARE_SIZE);
             g.setColor(getColors(square.getType().getValue())[1]);
-            g.fillRect(x+3,y+3,SQUARE_SIZE-6,SQUARE_SIZE-6);
+            g.fillRect(x+2,y+2,SQUARE_SIZE-4,SQUARE_SIZE-4);
 
+        } else if (square.getType() == PieceType.BOARD){
+            g.setColor(Color.BLACK);
+            g.fillRect(x,y,SQUARE_SIZE,SQUARE_SIZE);
         }
         /*else if (square.getType() == PieceType.BOARD){
             g.setColor(Color.WHITE);
