@@ -2,6 +2,8 @@ package karlney.tetris.core;
 
 public class Player implements Runnable{
 
+    private static final int FALLING_DELAY = 2;
+
     public final Board board;
     public final PieceGenerator generator;
     private final Thread t = new Thread(this);
@@ -10,7 +12,7 @@ public class Player implements Runnable{
     public Piece nextPiece;
 
     public int score=0;
-    public int rowCounter = 0;
+    public int lines = 0;
 
     public int delay;
     public int level;
@@ -21,7 +23,7 @@ public class Player implements Runnable{
         this.generator = generator;
         this.level = level;
         score=0;
-        rowCounter=0;
+        lines =0;
         currentPiece =generator.getNextBlock(board);
         nextPiece =generator.getNextBlock(board);
         running = false;
@@ -46,7 +48,10 @@ public class Player implements Runnable{
     public void	moveDown(){
         boolean pieceIsLanded = currentPiece.moveDown();
         if (pieceIsLanded){
-            newBlock(nextPiece);
+            newBlock();
+            if (!board.allowedPlacement(currentPiece)){
+                stop();
+            }
         }
     }
 
@@ -89,23 +94,34 @@ public class Player implements Runnable{
         if	(removedRows==4)
             score=score+(level+1)*1000;
 
-        rowCounter+=removedRows;
+        lines +=removedRows;
     }
 
-    private void updateFallScore(int fallDownRows) {
+    /*
+    actualLevel   free-fall   instant-drop
+                points       points
+===========   =========   ============
+     1             6           24
+     2             9           27
+     3            12           30
+     4            15           33
+     5            18           36
+     6            21           39
+     7            24           42
+     8            27           45
+     9            30           48
+    10            33           51
+     */
+    private void updateFallScore() {
+        //TODO ( (21 + (3 * actualLevel)) - freeFallIterations );
         score=score+(level+1)*5;
     }
 
-    public void	newBlock(Piece piece){
-        try{
-            int rows= board.placePieceOnBoard(piece);
-            updatePlaceScore(rows);
-            currentPiece = nextPiece;
-            nextPiece    = generator.getNextBlock(board);
-        }catch (UnableToPlacePieceException e) {
-            //TODO
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+    private void newBlock(){
+        int rows= board.placePieceOnBoard(currentPiece);
+        updatePlaceScore(rows);
+        currentPiece = nextPiece;
+        nextPiece    = generator.getNextBlock(board);
     }
 
     public void processInput(PlayerInput input){
@@ -119,9 +135,9 @@ public class Player implements Runnable{
             currentPiece.moveSideWays(input);
 
         if(input == PlayerInput.DROP ){
-            int fallDownRows = currentPiece.fallDown();
-            updateFallScore(fallDownRows);
-            setDelay(10);
+            currentPiece.fallDown();
+            updateFallScore();
+            t.interrupt();
         }
     }
 
@@ -132,7 +148,11 @@ public class Player implements Runnable{
     public void run(){
         while (running){
             try {
-                Thread.sleep(delay);
+                if (currentPiece.isFalling()){
+                    Thread.sleep(FALLING_DELAY);
+                }else{
+                    Thread.sleep(delay);
+                }
             }catch(InterruptedException e) {}
             moveDown();
         }
@@ -148,5 +168,13 @@ public class Player implements Runnable{
 
     public Board getBoard() {
         return board;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getLines() {
+        return lines;
     }
 }

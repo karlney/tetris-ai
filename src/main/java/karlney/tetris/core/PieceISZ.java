@@ -6,7 +6,7 @@ public abstract class PieceISZ extends AbstractPiece {
 
     public PieceISZ(int x, int y, Board board, Square[][] piece) {
         super(x,y,board,piece);
-        tilted=false;
+        tilted=true;
     }
 
     public PieceISZ(PieceISZ copy, int x, int y, int rotation, Board board) {

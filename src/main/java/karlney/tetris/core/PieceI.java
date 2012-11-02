@@ -3,7 +3,7 @@ package karlney.tetris.core;
 public class PieceI extends PieceISZ {
 
     static final boolean[][] I_NORMAL = {{false,true,false,false} ,{false,true,false,false},{false,true,false,false} ,{false,true,false,false}};
-    static final boolean[][] I_TILT   = {{false,false,false,false},{true,true,true,true}   ,{false,false,false,false},{false,false,false,false}};
+    static final boolean[][] I_TILT   = {{false,false,false,false},{false,false,false,false},{true,true,true,true},{false,false,false,false}};
 
     public PieceI(int x, int y, Board board, Square[][] piece) {
         super(x,y,board,piece);

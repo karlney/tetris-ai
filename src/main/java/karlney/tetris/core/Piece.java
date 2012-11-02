@@ -39,9 +39,14 @@ public interface Piece {
 
     /**
      * This method will move the piece to the very bottom and fix it to the board
-     * @return the number of rows this piece fell
      */
-    int fallDown();
+    void fallDown();
+
+    /**
+     *
+     * @return true if this piece is falling down
+     */
+    boolean isFalling();
 
     /**
      * Rotates the piece without checking if its possible or not (useful for AI planning)
@@ -73,4 +78,5 @@ public interface Piece {
     int getY();
 
     Square getSquare(int i, int j);
+
 }

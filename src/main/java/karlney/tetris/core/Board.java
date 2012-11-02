@@ -280,23 +280,27 @@ public class Board {
     }
     */
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param shape
+     * @return
+     */
     public boolean checkMove(int x, int y, Square[][] shape) {
         for(int j=0; j<shape.length; j++){
             for(int i=0; i<shape[0].length; i++){
                 try{
                     if(board[x+i][y+j].isFilled() && shape[i][j].isFilled())
                         return false;
+                }catch (Exception e) {
+                 //Edge case do nothing
                 }
-                catch (Exception e) { }
             }
         }
         return true;
     }
 
-    //TODO, this needs to be implemented
-    public int getRowsToFall(Piece piece) {
-        return 0;
-    }
 
     public Square getSquare(int col, int row) {
         return board[col][row];

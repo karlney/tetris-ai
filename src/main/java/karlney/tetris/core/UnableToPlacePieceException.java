@@ -8,7 +8,7 @@ package karlney.tetris.core;
  *
  * @author karl.neyvaldt
  */
-public class UnableToPlacePieceException extends Exception {
+public class UnableToPlacePieceException extends RuntimeException {
 
     public UnableToPlacePieceException(String msg) {
         super(msg);

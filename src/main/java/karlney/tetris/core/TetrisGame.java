@@ -56,6 +56,7 @@ public class TetrisGame {
         if	(level>= MAX_LEVEL)	level= MAX_LEVEL;
         for (Player pl:players) {
             pl.setDelay(getDelay());
+            pl.setLevel(level);
         }
     }
 
@@ -64,6 +65,7 @@ public class TetrisGame {
         if	(level<MIN_LEVEL) level=MIN_LEVEL;
         for (Player pl:players) {
             pl.setDelay(getDelay());
+            pl.setLevel(level);
         }
     }
 

@@ -58,6 +58,9 @@ public abstract class AbstractPiece implements Piece {
 
     @Override
     public synchronized boolean stepDown(){
+        if (falling) {
+            return false;
+        }
         boolean out= board.checkMove(x,y+1, piece);
         if (out){
             y++;
@@ -74,7 +77,7 @@ public abstract class AbstractPiece implements Piece {
     @Override
     public synchronized boolean moveDown(){
         if (board.checkMove(x,y+1, piece)){
-            y=y+1;
+            y++;
             return false;
         }
         else {
@@ -110,11 +113,14 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override
-    public int fallDown(){
+    public void fallDown(){
         falling=true;
-        return board.getRowsToFall(this);
     }
 
+    @Override
+    public boolean isFalling() {
+        return falling;
+    }
 
     public String toString(){
         return "shape="+this.piece[0][0].getType()+" x="+x+" y="+y+"\n";

@@ -210,9 +210,9 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
 
                 g.setColor(Color.RED);
                 g.drawString("Score",XSIZE-100,50);
-                g.drawString(""+player.currentPiece.getY(),XSIZE-100,80);
-                g.drawString("Rows",	XSIZE-100,110);
-                g.drawString(""+player.currentPiece.getX(),XSIZE-100,140);
+                g.drawString(""+player.getScore(),XSIZE-100,80);
+                g.drawString("Lines",	XSIZE-100,110);
+                g.drawString(""+player.getLines(),XSIZE-100,140);
                 g.drawString("Level", XSIZE-100,170);
                 g.drawString(""+level,XSIZE-100,200);
 
@@ -294,13 +294,14 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             g.fillRect(x,y,SQUARE_SIZE,SQUARE_SIZE);
             g.setColor(getColors(square.getType().getValue())[1]);
             g.fillRect(x+3,y+3,SQUARE_SIZE-6,SQUARE_SIZE-6);
-        //Fill squares with grid
-        }else if (square.getType() == PieceType.BOARD){
+
+        }
+        /*else if (square.getType() == PieceType.BOARD){
             g.setColor(Color.WHITE);
             g.fillRect(x,y,SQUARE_SIZE,SQUARE_SIZE);
             g.setColor(Color.BLACK);
             g.fillRect(x+1,y+1,SQUARE_SIZE-2,SQUARE_SIZE-2);
-        }
+        } */
     }
 
     public Color[] getColors(int nr){

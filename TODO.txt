@@ -1,8 +1,18 @@
 * Go through current code
 ** add comments, javadoc
 ** add refactoring placeholder comments
+
 ** make it compile (without AI)
 ** make it run (without AI)
+
+BUGS:
+
+Drop down always on
+
+-------------------
+
+
+
 ** make it run (wit AI)
 
 
