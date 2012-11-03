@@ -5,9 +5,10 @@
 ** make it compile (without AI) - DONE
 ** make it run (without AI)  - DONE
 
-* score calculations
+* score calculations - DONE
 
-* make it run (wit AI)
-
+* make it run (with AI)
+** piece place algorithm
+** piece move algorithm
 
 * Start working on EA engine

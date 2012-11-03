@@ -1,5 +1,7 @@
 package karlney.tetris.core;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 //TODO drawing and state needs to be separated!
 public class Board {
 
@@ -179,6 +181,7 @@ public class Board {
         return (getNrOfBlocks()+0.0)/(getMaxHeight()*10.0);
     }
 
+    /*
     public double getNrHoles(){
         double nr=0;
         for (int i=0; i<= cols; i++)	{
@@ -195,8 +198,34 @@ public class Board {
         }
         return nr;
     }
+    */
 
-    public int getBlocksInRow(int j){
+    /*
+ 5. Number of Holes: A hole is an empty cell that has at least one filled cell above it in the same column.
+     */
+    public int getNrHoles(){
+        throw new NotImplementedException();
+        //TODO, test method etc
+        /*
+        int nr=0;
+        for (int i=0; i<= cols; i++)	{
+            int last=0;
+            for (int j= rows; j>0; j--){
+                if (board[i][j].isFilled()){
+                    nr+=1*Math.pow(last,1.25);
+                    last=0;
+                }
+                else{
+                    last++;
+                }
+            }
+        }
+        return nr;
+        */
+    }
+
+
+    private int getBlocksInRow(int j){
         int nr=0;
         for(int i= cols; i>0; i--){
             if ( board[i][j].isFilled()){
@@ -303,7 +332,7 @@ public class Board {
                     if(board[x+i][y+j].isFilled() && shape[i][j].isFilled())
                         return false;
                 }catch (Exception e) {
-                 //Edge case do nothing
+                    //Edge case do nothing
                 }
             }
         }
@@ -325,6 +354,31 @@ public class Board {
     If we define a blockade as any block that’s directly above a hole, we should penalize blockades:
      */
     public int getBlockades() {
-        return 0;  //TODO
+        throw new NotImplementedException();
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    /*
+3. Row Transitions: The total number of row transitions. A row transition occurs when an empty cell is adjacent to a filled cell on the same row and vice versa.
+     */
+    public int getRowTransistions() {
+        throw new NotImplementedException();
+    }
+
+    /*
+4. Column Transitions: The total number of column transitions. A column transition occurs when an empty cell is adjacent to a filled cell on the same column and vice versa.
+     */
+    public int getColumnTransistions() {
+        throw new NotImplementedException();
+    }
+
+    /*
+6. Well Sums: A well is a succession of empty cells such that their left cells and right cells are both filled.
+     */
+    public int getWellSums() {
+        throw new NotImplementedException();
     }
 }

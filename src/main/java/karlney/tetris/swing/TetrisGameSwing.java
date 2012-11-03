@@ -1,5 +1,6 @@
 package karlney.tetris.swing;
 
+import karlney.tetris.ai.AbstractAIPlayer;
 import karlney.tetris.core.*;
 
 import javax.swing.*;
@@ -210,14 +211,17 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
                 drawPiece(player.getCurrentPiece(), g, 0, 0);
 
                 g.setColor(Color.RED);
-                g.drawString("Score",XSIZE-100,50);
-                g.drawString(""+player.getScore(),XSIZE-100,80);
-                g.drawString("Lines",	XSIZE-100,110);
-                g.drawString(""+player.getLines(),XSIZE-100,140);
-                g.drawString("Level", XSIZE-100,170);
-                g.drawString(""+game.getLevel(),XSIZE-100,200);
+                g.drawString("Level: "+game.getLevel(), XSIZE-100,20);
+                g.drawString("Score: "+player.getScore(),XSIZE-100,50);
+                g.drawString("Lines: "+player.getLines(),	XSIZE-100,110);
+                g.drawString("Pieces: "+player.getNumberOfPieces(), XSIZE-100,170);
 
                 drawNextPiece(g, player.getNextPiece());
+
+                if (player instanceof AbstractAIPlayer){
+                    drawDestination(g, ((AbstractAIPlayer) player).getDestination());
+                }
+
 
                 if(game.hasEnded()){	//If games is quit then display GAME OVER
                     Font f=g.getFont();
@@ -228,7 +232,7 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
                     g.setFont(new Font("Georgia",	Font.BOLD, 30));
                     //g.setColor(Color.YELLOW);
                     g.drawString("Final score",100,200);
-                    g.drawString(""+player.score,130,250);
+                    g.drawString(""+player.getScore(),130,250);
 
                     g.setFont(f);
                 }
@@ -244,6 +248,14 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
         }
         catch(Exception e){}
 
+    }
+
+    private void drawDestination(Graphics g, Piece piece) {
+        for(int j=0; j<piece.getSize(); j++){
+            for(int i=0; i<piece.getSize(); i++){
+                drawColoredSquare(piece.getSquare(i,j),g,(piece.getX()+i)*SQUARE_SIZE,(piece.getY()+j)*SQUARE_SIZE,Color.GRAY);
+            }
+        }
     }
 
     private void drawPiece(Piece piece, Graphics g, int Xoff, int Yoff) {
@@ -288,6 +300,16 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             c7=new Color(0,120,90), //Dark green
             c8=new Color(100,0,100), // Purple
             c9=new Color(0,250,250); //Blue
+
+    public void drawColoredSquare(Square square, Graphics g,int x, int y, Color c){
+        if(square.isFilled()){
+            g.setColor(getColors(square.getType().getValue())[0]);
+            g.fillRect(x,y,SQUARE_SIZE,SQUARE_SIZE);
+            g.setColor(c);
+            g.fillRect(x+2,y+2,SQUARE_SIZE-4,SQUARE_SIZE-4);
+
+        }
+    }
 
     public void drawSquare(Square square, Graphics g,int x, int y){
         if(square.isFilled()){

@@ -34,7 +34,7 @@ public class Player implements Runnable{
         nextPiece = generator.getNextBlock(board);
         running = false;
         pieceStatistics = new TreeMap<PieceType, Integer>();
-        for (PieceType t: pieceStatistics.keySet()){
+        for (PieceType t: PieceType.values()){
             pieceStatistics.put(t,0);
         }
         updateDistribution(currentPiece.getSquare(0, 0).getType());
@@ -101,7 +101,9 @@ public class Player implements Runnable{
     }
 
     private void updateDistribution(PieceType type) {
-        pieceStatistics.put(type,pieceStatistics.get(type)+1);
+        if (pieceStatistics.containsKey(type)){
+            pieceStatistics.put(type,pieceStatistics.get(type)+1);
+        }
     }
 
     public void processInput(PlayerInput input){
@@ -151,4 +153,13 @@ public class Player implements Runnable{
     public int getLines() {
         return lines;
     }
+
+    public int getNumberOfPieces() {
+        int out = 0;
+        for (Integer i: pieceStatistics.values()){
+            out+=i;
+        }
+        return out;
+    }
+
 }
