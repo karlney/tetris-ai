@@ -13,5 +13,6 @@ public enum PlayerInput {
     LEFT,
     RIGHT,
     DROP,
-    ROTATE
+    ROTATE,
+    INSTANT_MOVE
 }

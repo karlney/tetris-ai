@@ -19,18 +19,25 @@ public abstract class PieceISZ extends AbstractPiece {
 
     @Override
     public synchronized boolean rotateIfPossible(){
-        if(board.checkMove(x, y, getRotatedShape())) {
+        boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
+        if(rotationPossible){
             piece = getRotatedShape();
             tilted=!tilted;
-            return true;
+            rotation = (rotation+1)%getPossibleRotations();
         }
-        return false;
+        return rotationPossible;
     }
 
     @Override
     public void rotateNoCheck(){
         piece = getRotatedShape();
         tilted=!tilted;
+        rotation = (rotation+1)%getPossibleRotations();
+    }
+
+    @Override
+    public int getPossibleRotations() {
+        return 2;
     }
 
     protected Square[][] buildSquares(boolean[][] shape, PieceType type){

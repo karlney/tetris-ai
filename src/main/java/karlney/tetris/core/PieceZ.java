@@ -10,7 +10,7 @@ public class PieceZ extends PieceISZ {
     }
 
     public PieceZ(PieceZ copy, int x, int y, int rotation, Board board) {
-        super(copy,x,y,rotation,board);
+        super(copy, x, y, rotation, board);
     }
 
     protected Square[][] getRotatedShape(){
@@ -19,6 +19,11 @@ public class PieceZ extends PieceISZ {
         }else{
             return buildSquares(Z_NORMAL,PieceType.Z);
         }
+    }
+
+    @Override
+    public Piece getTranslatedCopy(int x, int y, int rotation, Board board) {
+        return new PieceZ(this, x, y, rotation, board);
     }
 
 }

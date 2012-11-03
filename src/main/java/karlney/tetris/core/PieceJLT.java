@@ -6,24 +6,35 @@ public class PieceJLT extends AbstractPiece {
         super(x,y,board,piece);
     }
 
-    public PieceJLT(PieceO copy, int x, int y, int rotation, Board board) {
+    public PieceJLT(PieceJLT copy, int x, int y, int rotation, Board board) {
         super(copy,x,y,rotation,board);
     }
 
+    @Override
+    public Piece getTranslatedCopy(int x, int y, int rotation, Board board) {
+        return new PieceJLT(this, x, y, rotation, board);
+    }
+
+    @Override
+    public int getPossibleRotations() {
+        return 4;
+    }
 
     @Override
     public synchronized boolean rotateIfPossible(){
-        boolean out = board.checkMove(x,y,getRotatedShape());
-        if(out){
+        boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
+        if(rotationPossible){
             piece = getRotatedShape();
+            rotation = (rotation+1)%getPossibleRotations();
         }
-        return out;
+        return rotationPossible;
     }
 
 
     @Override
     public void rotateNoCheck(){
         piece = getRotatedShape();
+        rotation = (rotation+1)%getPossibleRotations();
     }
 
     /**

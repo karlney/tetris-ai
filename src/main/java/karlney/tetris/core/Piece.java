@@ -77,6 +77,11 @@ public interface Piece {
 
     int getY();
 
+    int getPossibleRotations();
+
+    int getRotation();
+
     Square getSquare(int i, int j);
 
+    Piece getTranslatedCopy(int x, int y, int rotation, Board board);
 }

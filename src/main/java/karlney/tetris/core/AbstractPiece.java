@@ -9,6 +9,7 @@ public abstract class AbstractPiece implements Piece {
     protected boolean firstTryUsed;
     protected int x;
     protected int y;
+    protected int rotation;
 
 
     /**
@@ -26,6 +27,7 @@ public abstract class AbstractPiece implements Piece {
         this.piece = piece;
         this.x=x;
         this.y=y;
+        this.rotation=0;
     }
 
     /**
@@ -41,31 +43,43 @@ public abstract class AbstractPiece implements Piece {
      * @param board the new board that this piece is placed in
      */
     public AbstractPiece(AbstractPiece copy, int x, int y, int rotation, Board board){
-        this(x,y,board,copy.piece.clone());
+        this(x,y,board,copyPiece(copy.piece));
         for (int i=0; i<rotation; i++){
             rotateNoCheck();
         }
+    }
+
+    private static Square[][] copyPiece(Square[][] piece) {
+        Square[][] out = new Square[piece.length][piece.length];
+        for (int i=0; i<piece.length;i++){
+            System.arraycopy(piece[i], 0, out[i], 0, piece.length);
+        }
+        return out;
     }
 
 
     @Override
     public abstract boolean rotateIfPossible();
 
-
     @Override
     public abstract void rotateNoCheck();
 
+    @Override
+    public abstract Piece getTranslatedCopy(int x, int y, int rotation, Board board);
+
+    @Override
+    public abstract int getPossibleRotations();
 
     @Override
     public synchronized boolean stepDown(){
         if (falling) {
             return false;
         }
-        boolean out= board.checkMove(x,y+1, piece);
-        if (out){
+        boolean downMovePossible = board.checkMove(x,y+1, piece);
+        if (downMovePossible){
             y++;
         }
-        return out;
+        return downMovePossible;
     }
 
     @Override
@@ -148,5 +162,9 @@ public abstract class AbstractPiece implements Piece {
         return piece[i][j].isFilled();
     }
 
+    @Override
+    public int getRotation() {
+        return rotation;
+    }
 
 }

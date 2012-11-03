@@ -39,6 +39,15 @@ public class Board {
                 board[i][j]=new Square(PieceType.BOARD,false);
     }
 
+    public Board(Board copy){
+        this.cols = copy.cols;
+        this.rows = copy.rows;
+        board = new Square[cols +2][rows +2];
+        for (int i=0;i<cols+2;i++){
+            System.arraycopy(copy.board[i], 0, board[i], 0, rows + 2);
+        }
+    }
+
     /**
      * TODO
      * @param i
@@ -120,11 +129,11 @@ public class Board {
 
     /* ****AI planning methods*****  */
 
-    public boolean allowedPlacement(Piece s){
+    public boolean allowedPlacement(Piece piece){
         try {
-            for(int i=0; i<s.getSize(); i++){
-                for(int j=0; j<s.getSize(); j++){
-                    if(s.isFilled(i,j) && board[i+s.getX()][j+s.getY()].isFilled())
+            for(int i=0; i<piece.getSize(); i++){
+                for(int j=0; j<piece.getSize(); j++){
+                    if(piece.isFilled(i,j) && board[i+piece.getX()][j+piece.getY()].isFilled())
                         return false;
                 }
             }
@@ -308,5 +317,14 @@ public class Board {
 
     public int getCols() {
         return cols;
+    }
+
+    /*
+    It’s best to try not to have any holes at all, but sometimes having a hole or two is inevitable.
+    What can we do after we have holes in our formation? Good question, but we should not pile more blocks on top of our holes.
+    If we define a blockade as any block that’s directly above a hole, we should penalize blockades:
+     */
+    public int getBlockades() {
+        return 0;  //TODO
     }
 }

@@ -1,34 +1,43 @@
 package karlney.tetris.core;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Player implements Runnable{
 
     private static final int FALLING_DELAY = 3;
 
-    public final Board board;
-    public final PieceGenerator generator;
+    private final Board board;
+    private final PieceGenerator generator;
     private final Thread t = new Thread(this);
 
-    public Piece currentPiece;
-    public Piece nextPiece;
+    protected Piece currentPiece;
+    protected Piece nextPiece;
 
-    public int score=0;
-    public int lines = 0;
-    public int freeFallIterations = 0;
+    private int score = 0;
+    private int lines = 0;
+    private int freeFallIterations = 0;
+    private Map<PieceType,Integer> pieceStatistics;
 
-    public int delay;
-    public int level;
+    private int delay;
+    private int level;
     private boolean running;
 
     public Player(Board board, PieceGenerator generator, int level) {
         this.board = board;
         this.generator = generator;
         this.level = level;
-        score =0;
-        lines =0;
-        freeFallIterations =0;
-        currentPiece =generator.getNextBlock(board);
-        nextPiece =generator.getNextBlock(board);
+        score = 0;
+        lines = 0;
+        freeFallIterations = 0;
+        currentPiece = generator.getNextBlock(board);
+        nextPiece = generator.getNextBlock(board);
         running = false;
+        pieceStatistics = new TreeMap<PieceType, Integer>();
+        for (PieceType t: pieceStatistics.keySet()){
+            pieceStatistics.put(t,0);
+        }
+        updateDistribution(currentPiece.getSquare(0, 0).getType());
     }
 
     public void start(int delay){
@@ -50,7 +59,7 @@ public class Player implements Runnable{
     public void	moveDown(){
         boolean pieceIsLanded = currentPiece.moveDown();
         if (pieceIsLanded){
-            newBlock();
+            commitCurrentPieceToBoard();
             if (!board.allowedPlacement(currentPiece)){
                 stop();
             }
@@ -82,27 +91,26 @@ public class Player implements Runnable{
         lines +=removedRows;
     }
 
-    private void newBlock(){
+    protected void commitCurrentPieceToBoard(){
         int rows= board.placePieceOnBoard(currentPiece);
         updatePlaceScore(rows);
         currentPiece = nextPiece;
         nextPiece    = generator.getNextBlock(board);
         freeFallIterations = 0;
+        updateDistribution(currentPiece.getSquare(0, 0).getType());
+    }
+
+    private void updateDistribution(PieceType type) {
+        pieceStatistics.put(type,pieceStatistics.get(type)+1);
     }
 
     public void processInput(PlayerInput input){
-        if(input == PlayerInput.ROTATE)
-            currentPiece.rotateIfPossible();
-
-        if(input == PlayerInput.DOWN)
-            t.interrupt();
-
-        if(input == PlayerInput.LEFT || input == PlayerInput.RIGHT)
-            currentPiece.moveSideWays(input);
-
-        if(input == PlayerInput.DROP ){
-            currentPiece.fallDown();
-            t.interrupt();
+        switch (input){
+            case ROTATE: currentPiece.rotateIfPossible(); break;
+            case DOWN: t.interrupt(); break;
+            case LEFT: currentPiece.moveSideWays(input); break;
+            case RIGHT: currentPiece.moveSideWays(input); break;
+            case DROP: currentPiece.fallDown(); t.interrupt(); break;
         }
     }
 
