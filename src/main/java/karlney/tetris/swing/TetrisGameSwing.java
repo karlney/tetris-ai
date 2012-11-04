@@ -1,6 +1,6 @@
 package karlney.tetris.swing;
 
-import karlney.tetris.ai.AbstractAIPlayer;
+import karlney.tetris.ai.AIPlayer;
 import karlney.tetris.core.*;
 
 import javax.swing.*;
@@ -218,8 +218,8 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
 
                 drawNextPiece(g, player.getNextPiece());
 
-                if (player instanceof AbstractAIPlayer){
-                    drawDestination(g, ((AbstractAIPlayer) player).getDestination());
+                if (player instanceof AIPlayer){
+                    drawDestination(g, ((AIPlayer) player).getDestination());
                 }
 
 

@@ -18,6 +18,18 @@ import karlney.tetris.core.Piece;
 
  * </p>
  *
+ * <p>
+ *  The evaluation function is a linear sum of all the above features. The weights of each feature were set and determined using particle swarm optimization.
+The following table shows the feature number (as outlined above) and its weight respectively:
+FEATURE #	WEIGHT
+1	-4.500158825082766
+2	3.4181268101392694
+3	-3.2178882868487753
+4	-9.348695305445199
+5	-7.899265427351652
+6	-3.3855972247263626
+ * </p>
+ *
  * Date: 2012-11-03
  * Time: 19:56
  *
@@ -25,21 +37,30 @@ import karlney.tetris.core.Piece;
  */
 
 /*
+Different PSO libs:
+
+http://jswarm-pso.sourceforge.net/
+
+http://cilib.net/docs/dev/windows-configurations.html
  */
 public class IETetrisBoardEvaluator implements BoardEvaluator{
 
+    double[] w = new double[]{0.0,-4.500158825082766,3.4181268101392694,-3.2178882868487753,-9.348695305445199,-7.899265427351652,-3.3855972247263626};
+
     @Override
-    public double score(Board board, Piece piece, int linesRemoved) {
-        int landHeight = getLandingHeight(board.getRows(),piece.getY());
-        int rowTransitions = board.getRowTransistions();
-        int columnTransitions = board.getColumnTransistions();
-        int holes = board.getNrHoles();
-        int wellSums = board.getWellSums();
-        return 0;
+    public double score(Board board, Piece piece, int rows) {
+        int lh = getLandingHeight(board.getRows(),piece.getY());
+        int re = rows;
+        int rt = BoardMeasuresUtil.getRowTransistions(board);
+        int ct = BoardMeasuresUtil.getColumnTransistions(board);
+        int ho = BoardMeasuresUtil.getNrHoles(board);
+        int ws = BoardMeasuresUtil.getWellSums(board);
+        return w[1]*lh+w[2]*re+w[3]*rt+w[4]*ct+w[5]*ho+w[6]*ws;
     }
 
     private int getLandingHeight(int boardRows, int y) {
         return 0;
     }
+
 
 }

@@ -1,9 +1,15 @@
 package karlney.tetris.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
+
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Player implements Runnable{
+
+    private static Logger log = LoggerFactory.getLogger(Player.class);
 
     private static final int FALLING_DELAY = 3;
 
@@ -45,6 +51,7 @@ public class Player implements Runnable{
             running = true;
             this.delay = delay;
             t.start();
+            log.info("Player thread "+t.getName()+" started.");
         } else {
             throw new IllegalStateException("Thread already running, can't start twice");
         }
@@ -54,29 +61,37 @@ public class Player implements Runnable{
         running=false;
         this.delay=0;
         t.interrupt();
+        log.info("Player thread "+t.getName()+" stopped.");
     }
 
-    public void	moveDown(){
+    public synchronized void moveDown(){
         boolean pieceIsLanded = currentPiece.moveDown();
         if (pieceIsLanded){
-            commitCurrentPieceToBoard();
+            try {
+                log.debug("Placing piece on board "+currentPiece);
+                commitCurrentPieceToBoard();
+            } catch (UnableToPlacePieceException e) {
+                log.error("Could not place piece "+currentPiece+" on board.",e);
+                stop();
+            }
             if (!board.allowedPlacement(currentPiece)){
+                log.error("Could not place piece "+currentPiece+" on board.");
                 stop();
             }
         }
     }
 
-    public void setDelay(int delay){
+    public synchronized void setDelay(int delay){
         this.delay = delay;
         t.interrupt();
     }
 
-    public void setLevel(int level) {
+    public synchronized void setLevel(int level) {
         this.level = level;
     }
 
 
-    public void updatePlaceScore(int removedRows){
+    public synchronized void updatePlaceScore(int removedRows){
         score+= ((21+(3*level))-freeFallIterations+1);
 
         if	(removedRows==1)
@@ -91,8 +106,9 @@ public class Player implements Runnable{
         lines +=removedRows;
     }
 
-    protected void commitCurrentPieceToBoard(){
-        int rows= board.placePieceOnBoard(currentPiece);
+    protected synchronized void commitCurrentPieceToBoard() throws UnableToPlacePieceException {
+        board.placePieceOnBoard(currentPiece);
+        int rows= board.removeFullRows();
         updatePlaceScore(rows);
         currentPiece = nextPiece;
         nextPiece    = generator.getNextBlock(board);
@@ -100,7 +116,7 @@ public class Player implements Runnable{
         updateDistribution(currentPiece.getSquare(0, 0).getType());
     }
 
-    private void updateDistribution(PieceType type) {
+    private synchronized void updateDistribution(PieceType type) {
         if (pieceStatistics.containsKey(type)){
             pieceStatistics.put(type,pieceStatistics.get(type)+1);
         }

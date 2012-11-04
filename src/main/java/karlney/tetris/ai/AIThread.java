@@ -21,12 +21,12 @@ import java.util.List;
 public class AIThread implements Runnable {
 
     private Thread t = new Thread(this);
-    private AbstractAIPlayer player;
+    private AIPlayer player;
     private PiecePlacer placer;
     private PathFinder pathFinder;
     private int delay;
 
-    public AIThread(AbstractAIPlayer player,
+    public AIThread(AIPlayer player,
                     int delay,
                     PiecePlacer placer,
                     PathFinder pathFinder) {
@@ -116,7 +116,7 @@ public class AIThread implements Runnable {
     public double calcUtility(Piece b){
         board.createBackup();
         board.placeBlock(b);
-        int R= board.checkFullRow();
+        int R= board.removeFullRows();
         double H= board.getNrHoles();
 
         //   double F=gf.getNearlyFullRows();

@@ -1,6 +1,12 @@
 package karlney.tetris.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PieceJLT extends AbstractPiece {
+
+    private static Logger log = LoggerFactory.getLogger(PieceJLT.class);
+
 
     public PieceJLT(int x, int y,  Board board, Square[][] piece) {
         super(x,y,board,piece);
@@ -24,16 +30,18 @@ public class PieceJLT extends AbstractPiece {
     public synchronized boolean rotateIfPossible(){
         boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
         if(rotationPossible){
-            piece = getRotatedShape();
+            shape = getRotatedShape();
             rotation = (rotation+1)%getPossibleRotations();
+        }else{
+            //TODO implement wall kick here
         }
         return rotationPossible;
     }
 
 
     @Override
-    public void rotateNoCheck(){
-        piece = getRotatedShape();
+    public synchronized void rotateNoCheck(){
+        shape = getRotatedShape();
         rotation = (rotation+1)%getPossibleRotations();
     }
 
@@ -42,13 +50,30 @@ public class PieceJLT extends AbstractPiece {
      */
     private Square[][] getRotatedShape(){
         Square[][] shapeClone= new Square[getSize()][getSize()];
-        for (int i=0; i<3;i++){
-            for(int x=0; x<getSize(); x++){
-                for(int y=0; y<getSize(); y++){
-                    shapeClone[x][y]= piece[y][2-x];
-                }
+        for(int x=0; x<3; x++){
+            for(int y=0; y<3; y++){
+                shapeClone[x][y]= shape[y][2-x];
             }
         }
+
+        int b = 2;
+        //TGM rotation (bottom is always preserved)
+        if (!shapeClone[0][b].isFilled() && !shapeClone[1][b].isFilled() && !shapeClone[2][b].isFilled()){
+            Square[][] tgm = new Square[getSize()][getSize()];
+
+            for(int x=0; x<3; x++){
+                tgm[x][0] = shapeClone[x][2];
+            }
+
+            for(int x=0; x<3; x++){
+                for(int y=0; y<2; y++){
+                    tgm[x][y+1] =  shapeClone[x][y];
+                }
+            }
+
+            shapeClone = tgm;
+        }
+        /*
         //The pieces needs to be rotated counter clockwise, therefore this is needed
         Square[][] out= new Square[getSize()][getSize()];
         for (int i=0; i<3;i++){
@@ -58,15 +83,8 @@ public class PieceJLT extends AbstractPiece {
                 }
             }
         }
-        return out;
+        */
+        return shapeClone;
     }
 
 }
-
-/*
-x,y   -> xp,yp
-2,2 -> 2,0
-1,1 -> 1,1
-1,2 -> 2,1
-0,0 -> 0,2
-*/

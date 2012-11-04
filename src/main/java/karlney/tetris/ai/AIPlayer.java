@@ -1,15 +1,20 @@
 package karlney.tetris.ai;
 
 import karlney.tetris.core.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class AbstractAIPlayer extends Player {
+public class AIPlayer extends Player {
+
+    private static Logger log = LoggerFactory.getLogger(Player.class);
 
     private AIThread aiThread;
 
     private Piece destinationPiece = null;
 
-    public AbstractAIPlayer(Board board, PieceGenerator generator, int level) {
+    public AIPlayer(Board board, PieceGenerator generator, int level, AIThread aiThread) {
         super(board, generator, level);
+        this.aiThread = aiThread;
     }
 
     public void start(int delay){
@@ -26,7 +31,12 @@ public abstract class AbstractAIPlayer extends Player {
         super.processInput(input);
         if (input == PlayerInput.INSTANT_MOVE){
             currentPiece = destinationPiece;
-            commitCurrentPieceToBoard();
+            try {
+                commitCurrentPieceToBoard();
+            } catch (UnableToPlacePieceException e) {
+                log.error("Unable to place piece.",e);
+                stop();
+            }
         }
     }
 

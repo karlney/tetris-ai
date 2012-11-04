@@ -4,9 +4,11 @@ public abstract class AbstractPiece implements Piece {
 
     protected final Board board;
 
-    protected Square[][] piece;
+    protected Square[][] shape;
     protected boolean falling;
-    protected boolean firstTryUsed;
+
+    protected int slides;
+
     protected int x;
     protected int y;
     protected int rotation;
@@ -18,13 +20,13 @@ public abstract class AbstractPiece implements Piece {
      * @param x start pos x
      * @param y start pos y
      * @param board the new board that this piece is placed in
-     * @param piece the piece squares
+     * @param shape the piece squares
      */
-    public AbstractPiece(int x, int y, Board board, Square[][] piece){
+    public AbstractPiece(int x, int y, Board board, Square[][] shape){
         this.board = board;
         falling=false;
-        firstTryUsed =true;
-        this.piece = piece;
+        slides = 0;
+        this.shape = shape;
         this.x=x;
         this.y=y;
         this.rotation=0;
@@ -43,7 +45,7 @@ public abstract class AbstractPiece implements Piece {
      * @param board the new board that this piece is placed in
      */
     public AbstractPiece(AbstractPiece copy, int x, int y, int rotation, Board board){
-        this(x,y,board,copyPiece(copy.piece));
+        this(x,y,board,copyPiece(copy.shape));
         for (int i=0; i<rotation; i++){
             rotateNoCheck();
         }
@@ -75,7 +77,7 @@ public abstract class AbstractPiece implements Piece {
         if (falling) {
             return false;
         }
-        boolean downMovePossible = board.checkMove(x,y+1, piece);
+        boolean downMovePossible = board.checkMove(x,y+1, shape);
         if (downMovePossible){
             y++;
         }
@@ -83,25 +85,25 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override
-    public void stepDownAFAP(){
+    public synchronized void stepDownAFAP(){
         while (stepDown()){
         }
     }
 
     @Override
     public synchronized boolean moveDown(){
-        if (board.checkMove(x,y+1, piece)){
+        if (board.checkMove(x,y+1, shape)){
             y++;
+            slides=0;
             return false;
-        }
-        else {
-            if (firstTryUsed){
-                firstTryUsed =!firstTryUsed;
-                return true;
-            }
-            else{
-                firstTryUsed =true;
+        } else {
+            if (falling) return true;
+            if (slides<1){
+                slides++;
                 return false;
+            }else{
+                slides=0;
+                return true;
             }
         }
     }
@@ -112,13 +114,13 @@ public abstract class AbstractPiece implements Piece {
             return false;
         }
         if (dir==PlayerInput.LEFT){
-            if (board.checkMove(x - 1, y, piece)){
+            if (board.checkMove(x - 1, y, shape)){
                 x=x-1;
                 return true;
             }
         }
         if (dir==PlayerInput.RIGHT){
-            if (board.checkMove(x + 1, y, piece)){
+            if (board.checkMove(x + 1, y, shape)){
                 x=x+1;
                 return true;
             }
@@ -127,43 +129,48 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override
-    public void fallDown(){
+    public synchronized void fallDown(){
         falling=true;
     }
 
     @Override
-    public boolean isFalling() {
+    public synchronized boolean isFalling() {
         return falling;
     }
 
     public String toString(){
-        return "shape="+this.piece[0][0].getType()+" x="+x+" y="+y+"\n";
+        return this.shape[0][0].getType()+"{x="+x+" y="+y+"}";
     }
 
     public int getSize() {
-        return piece.length;
+        return shape.length;
     }
 
-    public int getX() {
+    public synchronized int getX() {
         return x;
     }
 
-    public int getY() {
+    public synchronized int getY() {
         return y;
     }
 
     @Override
-    public Square getSquare(int i, int j) {
-        return piece[i][j];
+    public synchronized Square getSquare(int i, int j) {
+        return shape[i][j];
     }
 
     @Override
-    public boolean isFilled(int i, int j) {
-        return piece[i][j].isFilled();
+    public synchronized Square[][] getShape() {
+        return shape;
     }
 
     @Override
-    public int getRotation() {
+    public synchronized boolean isFilled(int i, int j) {
+        return shape[i][j].isFilled();
+    }
+
+    @Override
+    public synchronized int getRotation() {
         return rotation;
     }
 

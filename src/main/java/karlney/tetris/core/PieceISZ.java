@@ -10,7 +10,7 @@ public abstract class PieceISZ extends AbstractPiece {
     }
 
     public PieceISZ(PieceISZ copy, int x, int y, int rotation, Board board) {
-        this(x, y, board, copy.piece.clone());
+        this(x, y, board, copy.shape.clone());
         this.tilted = copy.tilted;
         for (int i=0; i<rotation; i++){
             rotateNoCheck();
@@ -21,7 +21,7 @@ public abstract class PieceISZ extends AbstractPiece {
     public synchronized boolean rotateIfPossible(){
         boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
         if(rotationPossible){
-            piece = getRotatedShape();
+            shape = getRotatedShape();
             tilted=!tilted;
             rotation = (rotation+1)%getPossibleRotations();
         }
@@ -29,8 +29,8 @@ public abstract class PieceISZ extends AbstractPiece {
     }
 
     @Override
-    public void rotateNoCheck(){
-        piece = getRotatedShape();
+    public synchronized void rotateNoCheck(){
+        shape = getRotatedShape();
         tilted=!tilted;
         rotation = (rotation+1)%getPossibleRotations();
     }
@@ -52,7 +52,7 @@ public abstract class PieceISZ extends AbstractPiece {
 
     protected abstract Square[][] getRotatedShape();
 
-    protected boolean isTilted() {
+    protected synchronized boolean isTilted() {
         return tilted;
     }
 }

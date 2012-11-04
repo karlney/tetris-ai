@@ -4,8 +4,13 @@
 ** add refactoring placeholder comments - IN PROGRESS..
 ** make it compile (without AI) - DONE
 ** make it run (without AI)  - DONE
-
 * score calculations - DONE
+
+BUG - Stuck in second row (and not fallen down to bootom concurrency problem?)
+FEATURE - Wall kicks (http://harddrop.com/wiki/TGM_rotation)
+FEATURE - TGM rotation
+
+-------- AI -----
 
 * make it run (with AI)
 ** piece place algorithm
