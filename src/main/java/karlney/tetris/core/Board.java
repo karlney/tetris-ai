@@ -149,7 +149,7 @@ public class Board {
                     if(board[x+i][y+j].isFilled() && shape[i][j].isFilled())
                         return false;
                 }catch(IndexOutOfBoundsException e){
-                    //this is ok
+                    //it is ok for the bounding box to be outside boundaries
                 }
             }
         }
@@ -169,4 +169,7 @@ public class Board {
         return board[x][y];
     }
 
+    public boolean isFilled(int x, int y) {
+        return board[x][y].isFilled();
+    }
 }

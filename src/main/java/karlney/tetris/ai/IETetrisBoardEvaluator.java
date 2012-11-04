@@ -49,18 +49,15 @@ public class IETetrisBoardEvaluator implements BoardEvaluator{
 
     @Override
     public double score(Board board, Piece piece, int rows) {
-        int lh = getLandingHeight(board.getRows(),piece.getY());
+        int lh = BoardMeasuresUtil.getLandingHeight(board.getRows(),piece);
         int re = rows;
-        int rt = BoardMeasuresUtil.getRowTransistions(board);
-        int ct = BoardMeasuresUtil.getColumnTransistions(board);
+        int rt = BoardMeasuresUtil.getRowTransitions(board);
+        int ct = BoardMeasuresUtil.getColumnTransitions(board);
         int ho = BoardMeasuresUtil.getNrHoles(board);
         int ws = BoardMeasuresUtil.getWellSums(board);
         return w[1]*lh+w[2]*re+w[3]*rt+w[4]*ct+w[5]*ho+w[6]*ws;
     }
 
-    private int getLandingHeight(int boardRows, int y) {
-        return 0;
-    }
 
 
 }

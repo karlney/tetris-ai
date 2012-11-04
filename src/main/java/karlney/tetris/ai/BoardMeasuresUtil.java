@@ -132,36 +132,54 @@ public class BoardMeasuresUtil {
 
     */
 
-
+    /*
+1. Landing Height: The height where the piece is put (= the height of the column + (the height of the piece / 2))
+     */
+    public static int getLandingHeight(int boardRows, Piece piece) {
+        return boardRows - piece.getSize()/2 - piece.getY()+1;
+    }
 
 
     /*
 3. Row Transitions: The total number of row transitions. A row transition occurs when an empty cell is adjacent to a filled cell on the same row and vice versa.
     */
-    public static int getRowTransistions(Board board) {
-        throw new UnsupportedOperationException();
+    public static int getRowTransitions(Board board) {
+        int nr=0;
+        for (int j=board.getRows(); j>0; j--){
+            for (int i=1; i<board.getCols(); i++)	{
+                if (board.isFilled(i+1,j)!=board.isFilled(i,j)){
+                    nr++;
+                }
+            }
+        }
+        return nr;
     }
 
     /*
 4. Column Transitions: The total number of column transitions. A column transition occurs when an empty cell is adjacent to a filled cell on the same column and vice versa.
      */
-    public static int getColumnTransistions(Board board) {
-        throw new UnsupportedOperationException();
+    public static int getColumnTransitions(Board board) {
+        int nr=0;
+        for (int j=board.getRows(); j>1; j--){
+            for (int i=1; i<board.getCols()+1; i++)	{
+                if (board.isFilled(i,j-1)!=board.isFilled(i,j)){
+                    nr++;
+                }
+            }
+        }
+        return nr;
     }
 
     /*
 5. Number of Holes: A hole is an empty cell that has at least one filled cell above it in the same column.
     */
     public static int getNrHoles(Board board){
-        throw new UnsupportedOperationException();
-        //TODO, test method etc
-        /*
         int nr=0;
-        for (int i=0; i<= cols; i++)	{
+        for (int i=0; i<=board.getCols(); i++)	{
             int last=0;
-            for (int j= rows; j>0; j--){
-                if (board[i][j].isFilled()){
-                    nr+=1*Math.pow(last,1.25);
+            for (int j= board.getRows(); j>0; j--){
+                if (board.isFilled(i, j)){
+                    nr+=last;
                     last=0;
                 }
                 else{
@@ -170,13 +188,29 @@ public class BoardMeasuresUtil {
             }
         }
         return nr;
-        */
     }
 
     /*
 6. Well Sums: A well is a succession of empty cells such that their left cells and right cells are both filled.
     */
     public static int getWellSums(Board board) {
-        throw new UnsupportedOperationException();
+        int nr=0;
+        for (int i=1; i<=board.getCols()+1; i++){
+            for (int j= board.getRows(); j>0; j--){
+                if (!board.getSquare(i,j).isFilled() && board.getSquare(i-1,j).isFilled() && board.getSquare(i+1,j).isFilled()){
+                    //Found well cell, count it plus the number of empty cells below it
+                    nr++;
+                    for (int k = j+1; k<board.getRows(); k++){
+                        if (!board.getSquare(i,k).isFilled()) {
+                            nr++;
+                        }else{
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return nr;
     }
+
 }
