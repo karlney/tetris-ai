@@ -28,14 +28,26 @@ public class PieceJLT extends AbstractPiece {
 
     @Override
     public synchronized boolean rotateIfPossible(){
-        boolean rotationPossible = board.allowedPlacement(x, y, getRotatedShape());
-        if(rotationPossible){
-            shape = getRotatedShape();
-            rotation = (rotation+1)% getPossibleOrientations();
+        if (inputsAccepted){
+            boolean rotationPossible = board.allowedPlacement(x, y, getRotatedShape());
+            if(rotationPossible){
+                shape = getRotatedShape();
+                rotation = (rotation+1)% getPossibleOrientations();
+            }else{
+                for (int i=-1; i<=1; i+=2){
+                    rotationPossible = board.allowedPlacement(x+i, y, getRotatedShape());
+                    if (rotationPossible){
+                        x+=i;
+                        shape = getRotatedShape();
+                        rotation = (rotation+1)% getPossibleOrientations();
+                        break;
+                    }
+                }
+            }
+            return rotationPossible;
         }else{
-            //TODO implement wall kick here
+            return false;
         }
-        return rotationPossible;
     }
 
 

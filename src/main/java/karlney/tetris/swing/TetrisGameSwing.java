@@ -45,7 +45,23 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
     public TetrisGame game;
     public PieceGenerator generator = new PieceGenerator();
 
-    //public AIplayer player= new AIplayer(this);
+
+    /**
+     * Tis method starts a new game
+     */
+    private void newGame() {
+        int level = DEFAULT_START_LEVEL;
+        if (game!=null){
+            game.stop();
+            level = game.getLevel();
+        }
+
+        Player player = new Player(new Board(),generator,level);
+        //Player player = AIFactory.getInstantMoveOnePieceAIPlayer(0,new Board(),generator,new IETetrisBoardEvaluator());
+
+        game = new TetrisGame(level,Arrays.asList(player));
+        game.start();
+    }
 
     public TetrisGameSwing(){
         initGraphics();
@@ -95,31 +111,6 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
         newGame();
     }
 
-    /**
-     * Tis method starts a new game
-     */
-    private void newGame() {
-        int level = DEFAULT_START_LEVEL;
-        if (game!=null){
-            game.stop();
-            level = game.getLevel();
-        }
-
-        //Player player = new Player(new Board(),generator,level);
-        Player player = new AIPlayer(
-                new Board(),
-                generator,
-                level,
-                new AIThread(
-                        2,
-                        new OnePieceNoPathPiecePlacer(new IETetrisBoardEvaluator()),
-                        new InstantMovePathFinder()
-                )
-        );
-
-        game = new TetrisGame(level,Arrays.asList(player));
-        game.start();
-    }
 
     /**
      * This methods shuts down the JVM

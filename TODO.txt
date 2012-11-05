@@ -7,19 +7,14 @@
 * score calculations - DONE
 
 
-
-
-BUG - Stuck in second row (and not fallen down to bootom concurrency problem?)
 FEATURE - Wall kicks (http://harddrop.com/wiki/TGM_rotation)
-FEATURE - TGM rotation
 
 -------- AI -----
 
-* make it run (with AI)
+* make it run (with AI) - DONE
 ** piece place algorithm
+
 ** piece move algorithm
 
-BUG - Pieces are using the walls
-BUG - AI stops doing stuff after 10 pieces
 
 * Start working on EA engine

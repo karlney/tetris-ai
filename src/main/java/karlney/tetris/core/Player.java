@@ -2,7 +2,6 @@ package karlney.tetris.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -61,21 +60,17 @@ public class Player implements Runnable{
         running=false;
         this.delay=0;
         t.interrupt();
-        log.info("Player thread "+t.getName()+" stopped.");
+        log.info("Player thread stopped with: Lines cleared "+lines+". Pieces played "+getNumberOfPieces());
     }
 
     public synchronized void moveDown(){
-        boolean pieceIsLanded = currentPiece.moveDown();
+        boolean pieceIsLanded = currentPiece.moveDown(); //TODO there can be things that happens in between here..
         if (pieceIsLanded){
             try {
                 log.debug("Placing piece on board "+currentPiece);
-                commitCurrentPieceToBoard();
+                commitCurrentPieceToBoard();                  //.. and here that makes the pieceIsLanded state to have changed
             } catch (UnableToPlacePieceException e) {
-                log.error("Could not place piece "+currentPiece+" on board.",e);
-                stop();
-            }
-            if (!board.allowedPlacement(currentPiece)){
-                log.error("Could not place piece "+currentPiece+" on board.");
+                log.error(e.getMessage());
                 stop();
             }
         }
@@ -118,6 +113,10 @@ public class Player implements Runnable{
         nextPiece    = generator.getNextBlock(board);
         freeFallIterations = 0;
         updateDistribution(currentPiece.getSquare(0, 0).getType());
+        //Make sure we have not reached end of game
+        if (!board.allowedPlacement(currentPiece)){
+            throw new UnableToPlacePieceException("The next piece "+currentPiece+" could not be placed on the board. This means GAME OVER.",null);
+        }
     }
 
     private synchronized void updateDistribution(PieceType type) {
@@ -132,7 +131,7 @@ public class Player implements Runnable{
             case DOWN: t.interrupt(); break;
             case LEFT: currentPiece.moveSideWays(input); break;
             case RIGHT: currentPiece.moveSideWays(input); break;
-            case DROP: currentPiece.fallDown(); t.interrupt(); break;
+            case DROP: currentPiece.drop(); t.interrupt(); break;
         }
     }
 
@@ -143,7 +142,7 @@ public class Player implements Runnable{
     public void run(){
         while (running){
             try {
-                if (currentPiece.isFalling()){
+                if (currentPiece.isDropped()){
                     Thread.sleep(FALLING_DELAY);
                 }else{
                     freeFallIterations++;

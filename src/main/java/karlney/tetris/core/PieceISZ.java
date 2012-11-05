@@ -19,13 +19,30 @@ public abstract class PieceISZ extends AbstractPiece {
 
     @Override
     public synchronized boolean rotateIfPossible(){
-        boolean rotationPossible = board.allowedPlacement(x, y, getRotatedShape());
-        if(rotationPossible){
-            shape = getRotatedShape();
-            tilted=!tilted;
-            rotation = (rotation+1)% getPossibleOrientations();
+        if (inputsAccepted){
+            boolean rotationPossible = board.allowedPlacement(x, y, getRotatedShape());
+            if(rotationPossible){
+                shape = getRotatedShape();
+                tilted=!tilted;
+                rotation = (rotation+1)% getPossibleOrientations();
+            }else{
+                //If the piece is S or Z only try one step to the left and one to the right,
+                // if the piece is an I then try one step to the left and 1 or 2 steps to the right
+                int tries = getSize()==3?1:2;
+                for (int i=-1; i<=tries; i+=1){
+                    rotationPossible = board.allowedPlacement(x+i, y, getRotatedShape());
+                    if (rotationPossible){
+                        x+=i;
+                        shape = getRotatedShape();
+                        rotation = (rotation+1)% getPossibleOrientations();
+                        break;
+                    }
+                }
+            }
+            return rotationPossible;
+        }else{
+            return false;
         }
-        return rotationPossible;
     }
 
     @Override

@@ -10,7 +10,7 @@ public abstract class AbstractPiece implements Piece {
     protected final Board board;
 
     protected Square[][] shape;
-    protected boolean falling;
+    protected boolean inputsAccepted = true;
 
     protected int slides;
 
@@ -29,7 +29,7 @@ public abstract class AbstractPiece implements Piece {
      */
     public AbstractPiece(int x, int y, Board board, Square[][] shape){
         this.board = board;
-        falling=false;
+        inputsAccepted = true;
         slides = 0;
         this.shape = shape;
         this.x=x;
@@ -98,51 +98,39 @@ public abstract class AbstractPiece implements Piece {
             slides=0;
             return false;
         } else {
-            if (falling){
-                //The piece is falling and further down movement is NOT possible - then return true (= the piece should be fixed)
-                return true;
-            }
-            if (slides<1){
+            if (inputsAccepted && slides<1){
                 //Down movement is NOT possible, but this is the first time this happens - then return false (= the piece should *not* be fixed)
                 //to allow for one last iteration of input from the player
                 slides++;
-                return false;
             }else{
                 //Down movement is NOT possible, and this is the second time this happens - then return true (= the piece should be fixed)
+                inputsAccepted = false;
                 slides=0;
-                return true;
             }
         }
+        return !inputsAccepted;
     }
 
     @Override
-    public synchronized boolean moveSideWays(PlayerInput dir){
-        if (falling) {
-            return false;
-        }
-        if (dir==PlayerInput.LEFT){
-            if (board.allowedPlacement(x - 1, y, shape)){
+    public synchronized void moveSideWays(PlayerInput dir){
+        if (inputsAccepted) {
+            if (dir==PlayerInput.LEFT && board.allowedPlacement(x - 1, y, shape)){
                 x=x-1;
-                return true;
             }
-        }
-        if (dir==PlayerInput.RIGHT){
-            if (board.allowedPlacement(x + 1, y, shape)){
+            if (dir==PlayerInput.RIGHT && board.allowedPlacement(x + 1, y, shape)) {
                 x=x+1;
-                return true;
             }
         }
-        return false;
     }
 
     @Override
-    public synchronized void fallDown(){
-        falling=true;
+    public synchronized void drop(){
+        inputsAccepted = false;
     }
 
     @Override
-    public synchronized boolean isFalling() {
-        return falling;
+    public synchronized boolean isDropped() {
+        return !inputsAccepted;
     }
 
     public String toString(){

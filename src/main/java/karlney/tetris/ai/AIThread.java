@@ -42,8 +42,7 @@ public class AIThread implements Runnable {
     public void run(){
 
         try {
-            //noinspection InfiniteLoopStatement
-            while (true){
+            while (player.isRunning()){
 
                 //If destination is unknown then find it
                 if (!player.hasDestination()){
@@ -86,60 +85,6 @@ public class AIThread implements Runnable {
         t.interrupt();
         log.info("AI Thread stopped.");
     }
-
-    /*
-    public Piece findBestPlacement(piecePlacer evaluator, Board board, Piece currentPiece, Piece nextPiece){
-
-        double bestU=-10000;
-        int y=0;
-
-        Piece tb,best=new Piece();
-
-
-        for (int h=0; h<4; h++){
-            for (int x=0; x< board.DEFAULT_COLS +1; x++){
-                tb = currentPiece.getCopy();
-                tb.overrideValues(x, y, h, board);
-                tb.stepDownAFAP();
-
-                for (int k=-1; k<=1; k++) {
-                    tb.x+=k;
-                    double utility=evalMove(tb);
-                    if (bestU<utility){
-                        bestU=utility;
-                        best=tb.getCopy();
-                    }
-                    tb.x-=k;
-                }
-            }
-        }
-
-        return best;
-    }
-
-    /*
-    public double evalMove(Piece b){
-        if ( !board.allowedPlacement(b)) {
-            return -10000;
-        }
-        double u=calcUtility(b);
-        return u;
-    }
-
-
-    public double calcUtility(Piece b){
-        board.createBackup();
-        board.placeBlock(b);
-        int R= board.removeFullRows();
-        double H= board.getNrHoles();
-
-        //   double F=gf.getNearlyFullRows();
-        board.retriveBackup();
-        return 200*R -200*H-5*Math.pow(board.DEFAULT_ROWS -b.y,2) ;
-    }
-
-
-    */
 
     public void setPlayer(AIPlayer player) {
         this.player = player;

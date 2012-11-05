@@ -33,20 +33,19 @@ public interface Piece {
     /**
      * This method will move the piece to the left or to the right (as given by dir param) if possible, otherwise it will do nothing
      * @param dir either LEFT or RIGHT, all other values will do nothing
-     * @return true if the block was moved, false otherwise
      */
-    boolean moveSideWays(PlayerInput dir);
+    void moveSideWays(PlayerInput dir);
 
     /**
-     * This method will set the falling flag to true to this piece which will prevent all further interactions with it
+     * This method will set the falling flag to true, preventing this piece to accept any further interactions with it
      */
-    void fallDown();
+    void drop();
 
     /**
      *
      * @return true if this piece is falling down
      */
-    boolean isFalling();
+    boolean isDropped();
 
 
     /**

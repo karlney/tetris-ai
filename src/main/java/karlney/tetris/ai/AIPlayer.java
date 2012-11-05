@@ -32,11 +32,11 @@ public class AIPlayer extends Player {
         super.processInput(input);
         if (input == PlayerInput.INSTANT_MOVE){
             currentPiece = destinationPiece;
-            destinationPiece = null;
+            clearDestination();
             try {
                 commitCurrentPieceToBoard();
             } catch (UnableToPlacePieceException e) {
-                log.error("Unable to place piece.",e);
+                log.info(e.getMessage());
                 stop();
             }
         }
