@@ -41,12 +41,12 @@ public abstract class AbstractPiece implements Piece {
      * @param copy the old piece this new one is based upon
      * @param x the x position
      * @param y the y position
-     * @param rotation the new rotation (relative to the current rotation), 0 means current rotation, 1 means to rotate one time, 2 two times etc.
+     * @param deltaRotation the new rotation (relative to the current rotation), 0 means current rotation, 1 means to rotate one time, 2 two times etc.
      * @param board the new board that this piece is placed in
      */
-    public AbstractPiece(AbstractPiece copy, int x, int y, int rotation, Board board){
+    public AbstractPiece(AbstractPiece copy, int x, int y, int deltaRotation, Board board){
         this(x,y,board,copyPiece(copy.shape));
-        for (int i=0; i<rotation; i++){
+        for (int i=0; i<deltaRotation; i++){
             rotateNoCheck();
         }
     }
@@ -59,49 +59,47 @@ public abstract class AbstractPiece implements Piece {
         return out;
     }
 
+    protected abstract void rotateNoCheck();
 
     @Override
     public abstract boolean rotateIfPossible();
 
     @Override
-    public abstract void rotateNoCheck();
+    public abstract Piece getTranslatedCopy(int x, int y, int deltaRotation, Board board);
 
     @Override
-    public abstract Piece getTranslatedCopy(int x, int y, int rotation, Board board);
+    public abstract int getPossibleOrientations();
 
-    @Override
-    public abstract int getPossibleRotations();
-
-    @Override
-    public synchronized boolean stepDown(){
-        if (falling) {
-            return false;
-        }
-        boolean downMovePossible = board.checkMove(x,y+1, shape);
-        if (downMovePossible){
-            y++;
-        }
-        return downMovePossible;
-    }
 
     @Override
     public synchronized void stepDownAFAP(){
-        while (stepDown()){
+        boolean downMovePossible = board.checkMove(x,y+1, shape);
+        while (downMovePossible){
+            y++;
+            downMovePossible = board.checkMove(x,y+1, shape);
         }
     }
 
     @Override
     public synchronized boolean moveDown(){
         if (board.checkMove(x,y+1, shape)){
+            //The down move is possible - then move the piece and return false (= the piece should *not* be fixed)
+            //Also reset the slides variable so that 'column floor' hits further up on the board doesn't affect further down
             y++;
             slides=0;
             return false;
         } else {
-            if (falling) return true;
+            if (falling){
+                //The piece is falling and further down movement is NOT possible - then return true (= the piece should be fixed)
+                return true;
+            }
             if (slides<1){
+                //Down movement is NOT possible, but this is the first time this happens - then return false (= the piece should *not* be fixed)
+                //to allow for one last iteration of input from the player
                 slides++;
                 return false;
             }else{
+                //Down movement is NOT possible, and this is the second time this happens - then return true (= the piece should be fixed)
                 slides=0;
                 return true;
             }
@@ -170,7 +168,7 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override
-    public synchronized int getRotation() {
+    public synchronized int getOrientation() {
         return rotation;
     }
 

@@ -23,7 +23,7 @@ public abstract class PieceISZ extends AbstractPiece {
         if(rotationPossible){
             shape = getRotatedShape();
             tilted=!tilted;
-            rotation = (rotation+1)%getPossibleRotations();
+            rotation = (rotation+1)% getPossibleOrientations();
         }
         return rotationPossible;
     }
@@ -32,11 +32,11 @@ public abstract class PieceISZ extends AbstractPiece {
     public synchronized void rotateNoCheck(){
         shape = getRotatedShape();
         tilted=!tilted;
-        rotation = (rotation+1)%getPossibleRotations();
+        rotation = (rotation+1)% getPossibleOrientations();
     }
 
     @Override
-    public int getPossibleRotations() {
+    public int getPossibleOrientations() {
         return 2;
     }
 

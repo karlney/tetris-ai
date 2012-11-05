@@ -14,12 +14,12 @@ public class PieceO extends AbstractPiece {
     public void rotateNoCheck() {}
 
     @Override
-    public Piece getTranslatedCopy(int x, int y, int rotation, Board board) {
+    public Piece getTranslatedCopy(int x, int y, int deltaRotation, Board board) {
         return new PieceO(this, x, y, board);
     }
 
     @Override
-    public int getPossibleRotations() {
+    public int getPossibleOrientations() {
         return 1;
     }
 

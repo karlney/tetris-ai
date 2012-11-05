@@ -17,12 +17,12 @@ public class PieceJLT extends AbstractPiece {
     }
 
     @Override
-    public Piece getTranslatedCopy(int x, int y, int rotation, Board board) {
-        return new PieceJLT(this, x, y, rotation, board);
+    public Piece getTranslatedCopy(int x, int y, int deltaRotation, Board board) {
+        return new PieceJLT(this, x, y, deltaRotation, board);
     }
 
     @Override
-    public int getPossibleRotations() {
+    public int getPossibleOrientations() {
         return 4;
     }
 
@@ -31,7 +31,7 @@ public class PieceJLT extends AbstractPiece {
         boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
         if(rotationPossible){
             shape = getRotatedShape();
-            rotation = (rotation+1)%getPossibleRotations();
+            rotation = (rotation+1)% getPossibleOrientations();
         }else{
             //TODO implement wall kick here
         }
@@ -42,7 +42,7 @@ public class PieceJLT extends AbstractPiece {
     @Override
     public synchronized void rotateNoCheck(){
         shape = getRotatedShape();
-        rotation = (rotation+1)%getPossibleRotations();
+        rotation = (rotation+1)% getPossibleOrientations();
     }
 
     /**

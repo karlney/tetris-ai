@@ -1,6 +1,6 @@
 package karlney.tetris.swing;
 
-import karlney.tetris.ai.AIPlayer;
+import karlney.tetris.ai.*;
 import karlney.tetris.core.*;
 
 import javax.swing.*;
@@ -104,7 +104,20 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             game.stop();
             level = game.getLevel();
         }
-        game = new TetrisGame(level,Arrays.asList(new Player(new Board(),generator,level)));
+
+        //Player player = new Player(new Board(),generator,level);
+        Player player = new AIPlayer(
+                new Board(),
+                generator,
+                level,
+                new AIThread(
+                        500,
+                        new OnePieceNoPathPiecePlacer(new IETetrisBoardEvaluator()),
+                        new InstantMovePathFinder()
+                )
+        );
+
+        game = new TetrisGame(level,Arrays.asList(player));
         game.start();
     }
 

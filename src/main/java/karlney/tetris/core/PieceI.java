@@ -22,7 +22,7 @@ public class PieceI extends PieceISZ {
     }
 
     @Override
-    public Piece getTranslatedCopy(int x, int y, int rotation, Board board) {
-        return new PieceI(this, x, y, rotation, board);
+    public Piece getTranslatedCopy(int x, int y, int deltaRotation, Board board) {
+        return new PieceI(this, x, y, deltaRotation, board);
     }
 }
