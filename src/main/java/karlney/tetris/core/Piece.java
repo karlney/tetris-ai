@@ -95,6 +95,8 @@ public interface Piece {
      */
     int getOrientation();
 
+    PieceType getType();
+
     Square[][] getShape();
 
     Square getSquare(int i, int j);

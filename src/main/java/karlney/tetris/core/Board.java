@@ -132,7 +132,7 @@ public class Board {
      * @return
      */
     public boolean allowedPlacement(Piece piece){
-        return checkMove(piece.getX(),piece.getY(),piece.getShape());
+        return allowedPlacement(piece.getX(), piece.getY(), piece.getShape());
     }
 
     /**
@@ -142,9 +142,9 @@ public class Board {
      * @param shape
      * @return
      */
-    public boolean checkMove(int x, int y, Square[][] shape) {
+    public boolean allowedPlacement(int x, int y, Square[][] shape) {
         for(int j=0; j<shape.length; j++){
-            for(int i=0; i<shape[0].length; i++){
+            for(int i=0; i<shape.length; i++){
                 try{
                     if(board[x+i][y+j].isFilled() && shape[i][j].isFilled())
                         return false;

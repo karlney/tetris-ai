@@ -1,8 +1,8 @@
 package karlney.tetris.ai;
 
-import karlney.tetris.core.Board;
-import karlney.tetris.core.Piece;
-import karlney.tetris.core.UnableToPlacePieceException;
+import karlney.tetris.core.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This PiecePlacer takes into consideration the board state and the current piece when evaluating where to place the latter
@@ -18,34 +18,42 @@ import karlney.tetris.core.UnableToPlacePieceException;
  */
 public class OnePieceNoPathPiecePlacer implements PiecePlacer{
 
+    private static Logger log = LoggerFactory.getLogger(OnePieceNoPathPiecePlacer.class);
+
     private BoardEvaluator evaluator;
+
+    public OnePieceNoPathPiecePlacer(BoardEvaluator evaluator) {
+        this.evaluator = evaluator;
+    }
 
     @Override
     public Piece bestPlacement(Board board, Piece currentPiece, Piece nextPiece) {
-        double bestUtility = Integer.MIN_VALUE;
-        int y = 1;
-        Piece best = currentPiece.getTranslatedCopy(currentPiece.getX(), currentPiece.getY(), currentPiece.getRotation(), board);
 
-        for (int h=0; h<currentPiece.getPossibleRotations(); h++){
-            for (int x=0; x< board.getCols() +1; x++){
-                Board boardCopy = new Board(board);
-                Piece tb = currentPiece.getTranslatedCopy(x, y, h, boardCopy);
-                try {
+        double bestUtility = Integer.MIN_VALUE;
+        //TODO be a bit smarter when it comes to rotations and translations
+        int y = 1;
+        Piece best = currentPiece.getTranslatedCopy(currentPiece.getX(), currentPiece.getY(), 0, board);
+        best.stepDownAFAP();
+        try{
+            for (int h=0; h<currentPiece.getPossibleOrientations(); h++){
+                for (int x=-1; x< board.getCols(); x++){
+                    Board boardCopy = new Board(board);
+                    Piece tb = currentPiece.getTranslatedCopy(x, y, h, boardCopy);
+                    tb.stepDownAFAP();
                     if (board.allowedPlacement(tb)){
-                        tb.stepDownAFAP();
                         boardCopy.placePieceOnBoard(tb);
                         int rows = board.removeFullRows();
                         double utility = evaluator.score(boardCopy,tb,rows);
                         if (utility>bestUtility){
                             bestUtility=utility;
-                            best=tb.getTranslatedCopy(x, y, h, boardCopy);
+                            best=tb.getTranslatedCopy(tb.getX(), tb.getY(), 0, board);
                         }
                     }
-                } catch (UnableToPlacePieceException e) {
-                    //Do nothing, move on to next position
                 }
-
             }
+        }catch (Exception e){
+            log.error("Best placement crashed",e);
+            e.printStackTrace();
         }
         return best;
     }

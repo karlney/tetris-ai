@@ -19,7 +19,7 @@ public abstract class PieceISZ extends AbstractPiece {
 
     @Override
     public synchronized boolean rotateIfPossible(){
-        boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
+        boolean rotationPossible = board.allowedPlacement(x, y, getRotatedShape());
         if(rotationPossible){
             shape = getRotatedShape();
             tilted=!tilted;

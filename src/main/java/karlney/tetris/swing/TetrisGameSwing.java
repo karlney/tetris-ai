@@ -111,7 +111,7 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
                 generator,
                 level,
                 new AIThread(
-                        500,
+                        2,
                         new OnePieceNoPathPiecePlacer(new IETetrisBoardEvaluator()),
                         new InstantMovePathFinder()
                 )
@@ -385,10 +385,11 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
     //Infinite rendering loop, can only be stopped by system exit
     public void	run(){
         try {
+            //noinspection InfiniteLoopStatement
             while(true){
                 if (jf.isShowing())
                     repaint();
-                Thread.sleep(10);
+                Thread.sleep(11);
             }
 
         }

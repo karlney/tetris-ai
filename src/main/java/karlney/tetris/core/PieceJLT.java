@@ -28,7 +28,7 @@ public class PieceJLT extends AbstractPiece {
 
     @Override
     public synchronized boolean rotateIfPossible(){
-        boolean rotationPossible = board.checkMove(x,y,getRotatedShape());
+        boolean rotationPossible = board.allowedPlacement(x, y, getRotatedShape());
         if(rotationPossible){
             shape = getRotatedShape();
             rotation = (rotation+1)% getPossibleOrientations();

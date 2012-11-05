@@ -104,6 +104,10 @@ public class Player implements Runnable{
             score=score+(level)*1000;
 
         lines +=removedRows;
+
+        if (lines>0 && (lines+getNumberOfPieces())%100==0){
+            log.info("Lines cleared "+lines+". Pieces played "+getNumberOfPieces());
+        }
     }
 
     protected synchronized void commitCurrentPieceToBoard() throws UnableToPlacePieceException {

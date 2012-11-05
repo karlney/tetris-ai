@@ -135,10 +135,9 @@ public class BoardMeasuresUtil {
     /*
 1. Landing Height: The height where the piece is put (= the height of the column + (the height of the piece / 2))
      */
-    public static int getLandingHeight(int boardRows, Piece piece) {
-        return boardRows - piece.getSize()/2 - piece.getY()+1;
+    public static double getLandingHeight(int boardRows, Piece piece) {
+        return boardRows - piece.getY() - piece.getSize()/2.0 +1;
     }
-
 
     /*
 3. Row Transitions: The total number of row transitions. A row transition occurs when an empty cell is adjacent to a filled cell on the same row and vice versa.
@@ -160,7 +159,7 @@ public class BoardMeasuresUtil {
      */
     public static int getColumnTransitions(Board board) {
         int nr=0;
-        for (int j=board.getRows(); j>1; j--){
+        for (int j=board.getRows()+1; j>1; j--){
             for (int i=1; i<board.getCols()+1; i++)	{
                 if (board.isFilled(i,j-1)!=board.isFilled(i,j)){
                     nr++;

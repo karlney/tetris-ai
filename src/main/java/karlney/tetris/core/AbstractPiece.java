@@ -1,6 +1,11 @@
 package karlney.tetris.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class AbstractPiece implements Piece {
+
+    private static Logger log = LoggerFactory.getLogger(AbstractPiece.class);
 
     protected final Board board;
 
@@ -70,19 +75,23 @@ public abstract class AbstractPiece implements Piece {
     @Override
     public abstract int getPossibleOrientations();
 
+    @Override
+    public PieceType getType() {
+        return shape[0][0].getType();
+    }
 
     @Override
     public synchronized void stepDownAFAP(){
-        boolean downMovePossible = board.checkMove(x,y+1, shape);
+        boolean downMovePossible = board.allowedPlacement(x, y + 1, shape);
         while (downMovePossible){
             y++;
-            downMovePossible = board.checkMove(x,y+1, shape);
+            downMovePossible = board.allowedPlacement(x, y + 1, shape);
         }
     }
 
     @Override
     public synchronized boolean moveDown(){
-        if (board.checkMove(x,y+1, shape)){
+        if (board.allowedPlacement(x, y + 1, shape)){
             //The down move is possible - then move the piece and return false (= the piece should *not* be fixed)
             //Also reset the slides variable so that 'column floor' hits further up on the board doesn't affect further down
             y++;
@@ -112,13 +121,13 @@ public abstract class AbstractPiece implements Piece {
             return false;
         }
         if (dir==PlayerInput.LEFT){
-            if (board.checkMove(x - 1, y, shape)){
+            if (board.allowedPlacement(x - 1, y, shape)){
                 x=x-1;
                 return true;
             }
         }
         if (dir==PlayerInput.RIGHT){
-            if (board.checkMove(x + 1, y, shape)){
+            if (board.allowedPlacement(x + 1, y, shape)){
                 x=x+1;
                 return true;
             }
@@ -137,7 +146,7 @@ public abstract class AbstractPiece implements Piece {
     }
 
     public String toString(){
-        return this.shape[0][0].getType()+"{x="+x+" y="+y+"}";
+        return getType()+" {x="+x+" y="+y+" h="+rotation+"} ";
     }
 
     public int getSize() {

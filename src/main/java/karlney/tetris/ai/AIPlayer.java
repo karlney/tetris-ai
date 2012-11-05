@@ -14,6 +14,7 @@ public class AIPlayer extends Player {
 
     public AIPlayer(Board board, PieceGenerator generator, int level, AIThread aiThread) {
         super(board, generator, level);
+        aiThread.setPlayer(this);
         this.aiThread = aiThread;
     }
 
@@ -27,10 +28,11 @@ public class AIPlayer extends Player {
         aiThread.stop();
     }
 
-    public void processInput(PlayerInput input){
+    public synchronized void processInput(PlayerInput input){
         super.processInput(input);
         if (input == PlayerInput.INSTANT_MOVE){
             currentPiece = destinationPiece;
+            destinationPiece = null;
             try {
                 commitCurrentPieceToBoard();
             } catch (UnableToPlacePieceException e) {

@@ -1,4 +1,4 @@
-package karlney.tetris.ai;
+package karlney.tetris;
 
 import karlney.tetris.core.Board;
 import karlney.tetris.core.PieceType;

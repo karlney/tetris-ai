@@ -4,8 +4,8 @@ import karlney.tetris.core.Board;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static karlney.tetris.ai.BoardBuilder.createBoard;
-import static karlney.tetris.ai.BoardBuilder.createEmptyBoard;
+import static karlney.tetris.BoardBuilder.createBoard;
+import static karlney.tetris.BoardBuilder.createEmptyBoard;
 
 /**
  * Date: 2012-11-04

@@ -30,4 +30,8 @@ public class Square{
         return type;
     }
 
+    @Override
+    public String toString() {
+        return filled?"1":"0";
+    }
 }

@@ -3,7 +3,7 @@ package karlney.tetris.ai;
 import karlney.tetris.core.Board;
 import org.junit.Test;
 
-import static karlney.tetris.ai.BoardBuilder.*;
+import static karlney.tetris.BoardBuilder.*;
 import static junit.framework.Assert.*;
 
 /**
