@@ -6,8 +6,8 @@ import karlney.tetris.core.PieceType;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static karlney.tetris.BoardBuilder.createBoard;
-import static karlney.tetris.PieceBuilder.createPiece;
+import static karlney.tetris.test.BoardBuilder.createBoard;
+import static karlney.tetris.test.PieceBuilder.createPiece;
 
 
 /**

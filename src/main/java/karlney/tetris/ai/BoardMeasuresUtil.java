@@ -2,6 +2,7 @@ package karlney.tetris.ai;
 
 import karlney.tetris.core.Board;
 import karlney.tetris.core.Piece;
+import karlney.tetris.core.PieceType;
 import karlney.tetris.core.Square;
 
 /**
@@ -139,8 +140,8 @@ public class BoardMeasuresUtil {
     public static int getRowTransitions(Board board) {
         int nr=0;
         for (int j=board.getRows(); j>0; j--){
-            for (int i=1; i<board.getCols(); i++)	{
-                if (board.isFilled(i+1,j)!=board.isFilled(i,j)){
+            for (int i=0; i<board.getCols()+1; i++)	{
+                if (board.isFilled(i,j)!=board.isFilled(i+1,j)){
                     nr++;
                 }
             }
@@ -153,7 +154,7 @@ public class BoardMeasuresUtil {
      */
     public static int getColumnTransitions(Board board) {
         int nr=0;
-        for (int j=board.getRows(); j>1; j--){
+        for (int j=board.getRows()+1; j>1; j--){
             for (int i=1; i<board.getCols()+1; i++)	{
                 if (board.isFilled(i,j-1)!=board.isFilled(i,j)){
                     nr++;

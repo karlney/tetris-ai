@@ -1,11 +1,12 @@
 package karlney.tetris.ai;
 
 import karlney.tetris.core.Board;
+import karlney.tetris.test.BoardBuilder;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static karlney.tetris.BoardBuilder.createBoard;
-import static karlney.tetris.BoardBuilder.createEmptyBoard;
+import static karlney.tetris.test.BoardBuilder.createBoard;
+import static karlney.tetris.test.BoardBuilder.createEmptyBoard;
 
 /**
  * Date: 2012-11-04
@@ -16,26 +17,39 @@ import static karlney.tetris.BoardBuilder.createEmptyBoard;
 public class ColumnTransitionsBoardMeasureTest {
 
     @Test
-    public void testEmptyBoard_Expect0(){
+    public void testEmptyBoard_Expect4(){
         Board board = createEmptyBoard(4, 4);
-        assertEquals(0,BoardMeasuresUtil.getColumnTransitions(board));
+        assertEquals(4,BoardMeasuresUtil.getColumnTransitions(board));
     }
 
     @Test
-    public void testBoardWithoutHoles_Expect2(){
-        Board board = createBoard(8, 6, new int[][]{{0,1,1,0,0,0,0,0}});
-        assertEquals(2,BoardMeasuresUtil.getColumnTransitions(board));
+    public void testBoardWithoutHoles_Expect8(){
+        Board board = createBoard(8, new int[][]{{0,1,1,0,0,0,0,0}});
+        assertEquals(8,BoardMeasuresUtil.getColumnTransitions(board));
     }
 
     @Test
-    public void testBoardWithHoles_Expect7(){
-        Board board = createBoard(3,4, new int[][]{
+    public void testBoardWithHoles_Expect5(){
+        Board board = createBoard(3, new int[][]{
                 {1,0,1},
                 {1,1,0},
-                {0,1,1},
-                {1,0,0}});
-        assertEquals(7,BoardMeasuresUtil.getColumnTransitions(board));
+                {0,0,0}});
+        assertEquals(5,BoardMeasuresUtil.getColumnTransitions(board));
     }
 
+    @Test
+    public void testComplexBoard_Expect24(){
 
+        Board board = BoardBuilder.createBoard(12, new int[][]{
+                {1, 0, 1, 0, 1, 0, 0, 1, 0, 1},//
+                {1, 0, 0, 1, 0, 1, 1, 1, 0, 0},//
+                {1, 0, 1, 0, 0, 1, 1, 1, 1, 1},//
+                {1, 0, 1, 0, 1, 1, 1, 1, 1, 0},//
+                {1, 0, 0, 0, 0, 1, 1, 0, 1, 0},//
+                {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+        assertEquals(24,BoardMeasuresUtil.getColumnTransitions(board));
+    }
 }

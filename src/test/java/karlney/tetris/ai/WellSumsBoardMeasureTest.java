@@ -1,11 +1,12 @@
 package karlney.tetris.ai;
 
 import karlney.tetris.core.Board;
+import karlney.tetris.test.BoardBuilder;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static karlney.tetris.BoardBuilder.createBoard;
-import static karlney.tetris.BoardBuilder.createEmptyBoard;
+import static karlney.tetris.test.BoardBuilder.createBoard;
+import static karlney.tetris.test.BoardBuilder.createEmptyBoard;
 
 /**
  * Date: 2012-11-04
@@ -28,7 +29,7 @@ public class WellSumsBoardMeasureTest {
     }
 
     @Test
-    public void testBoardWithOneWell_Expect2(){
+    public void testBoardWithOneWell_Expect3(){
         Board board = createBoard(3,4, new int[][]{
                 {1,0,1},
                 {1,0,1},
@@ -50,7 +51,7 @@ public class WellSumsBoardMeasureTest {
 6. Well Sums: A well is a succession of empty cells such that their left cells and right cells are both filled.
     */
     @Test
-    public void testBoardWithSeveralWells_Expect4(){
+    public void testBoardWithSeveralWells_Expect6(){
         Board board = createBoard(8,5, new int[][]{
                 {1,0,1,1,1,1,0,1},
                 {1,0,1,0,0,1,0,0},
@@ -64,16 +65,18 @@ public class WellSumsBoardMeasureTest {
 
 
     @Test
-    public void testComplexBoard_Expect20(){
-        Board board = createBoard(12, new int[][]{
-                {1,0,1,0,0,1,0,1,0,0},
-                {0,0,0,1,1,1,0,1,0,0},
-                {1,1,1,1,1,0,0,1,0,0},
-                {0,1,1,1,1,1,0,1,0,0},
-                {0,1,1,1,1,1,0,1,0,0},
-                {0,1,0,1,1,0,0,0,0,0},
-                {0,0,0,1,1,0,0,0,0,0},
-                {0,0,0,1,0,0,0,0,0,0}});
-        assertEquals(20,BoardMeasuresUtil.getWellSums(board));
+    public void testComplexBoard_Expect17(){
+
+        Board board = BoardBuilder.createBoard(12, new int[][]{
+                {1, 0, 1, 0, 1, 0, 0, 1, 0, 1},//
+                {1, 0, 0, 1, 0, 1, 1, 1, 0, 0},//
+                {1, 0, 1, 0, 0, 1, 1, 1, 1, 1},//
+                {1, 0, 1, 0, 1, 1, 1, 1, 1, 0},//
+                {1, 0, 0, 0, 0, 1, 1, 0, 1, 0},//
+                {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+        assertEquals(17,BoardMeasuresUtil.getWellSums(board));
     }
 }

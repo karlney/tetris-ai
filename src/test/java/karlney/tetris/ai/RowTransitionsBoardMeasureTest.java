@@ -1,11 +1,12 @@
 package karlney.tetris.ai;
 
 import karlney.tetris.core.Board;
+import karlney.tetris.test.BoardBuilder;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static karlney.tetris.BoardBuilder.createBoard;
-import static karlney.tetris.BoardBuilder.createEmptyBoard;
+import static karlney.tetris.test.BoardBuilder.createBoard;
+import static karlney.tetris.test.BoardBuilder.createEmptyBoard;
 
 /**
  * Date: 2012-11-04
@@ -16,22 +17,37 @@ import static karlney.tetris.BoardBuilder.createEmptyBoard;
 public class RowTransitionsBoardMeasureTest {
 
     @Test
-    public void testEmptyBoard_Expect0(){
+    public void testEmptyBoard_Expect8(){
         Board board = createEmptyBoard(4, 4);
-        assertEquals(0,BoardMeasuresUtil.getRowTransitions(board));
+        assertEquals(8,BoardMeasuresUtil.getRowTransitions(board));
     }
 
     @Test
-    public void testBoardWithoutHoles_Expect2(){
+    public void testBoardWithoutHoles_Expect14(){
         Board board = createBoard(8, 6, new int[][]{{0,1,0,0,0,0,0,0}});
-        assertEquals(2,BoardMeasuresUtil.getRowTransitions(board));
+        assertEquals(14,BoardMeasuresUtil.getRowTransitions(board));
     }
 
     @Test
-    public void testBoardWithHoles_Expect5(){
+    public void testBoardWithHoles_Expect12(){
         Board board = createBoard(3,6, new int[][]{{1,0,1},{1,1,0},{0,1,1},{1,0,0}});
-        assertEquals(5,BoardMeasuresUtil.getRowTransitions(board));
+        assertEquals(12,BoardMeasuresUtil.getRowTransitions(board));
     }
 
+    @Test
+    public void testComplexBoard_Expect40(){
+
+        Board board = BoardBuilder.createBoard(8, new int[][]{
+                {1, 0, 1, 0, 1, 0, 0, 1, 0, 1},//
+                {1, 0, 0, 1, 0, 1, 1, 1, 0, 0},//
+                {1, 0, 1, 0, 0, 1, 1, 1, 1, 1},//
+                {1, 0, 1, 0, 1, 1, 1, 1, 1, 0},//
+                {1, 0, 0, 0, 0, 1, 1, 0, 1, 0},//
+                {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
+        assertEquals(40,BoardMeasuresUtil.getRowTransitions(board));
+    }
 
 }

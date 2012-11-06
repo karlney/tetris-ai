@@ -2,6 +2,7 @@ package karlney.tetris.swing;
 
 import karlney.tetris.ai.*;
 import karlney.tetris.core.*;
+import karlney.tetris.test.BoardBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,6 +56,7 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             game.stop();
             level = game.getLevel();
         }
+
 
         Player player = new Player(new Board(),generator,level);
         //Player player = AIFactory.getInstantMoveOnePieceAIPlayer(0,new Board(),generator,new IETetrisBoardEvaluator());

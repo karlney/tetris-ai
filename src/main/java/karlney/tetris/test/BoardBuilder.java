@@ -1,4 +1,4 @@
-package karlney.tetris;
+package karlney.tetris.test;
 
 import karlney.tetris.core.Board;
 import karlney.tetris.core.PieceType;

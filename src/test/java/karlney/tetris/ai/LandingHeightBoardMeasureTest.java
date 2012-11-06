@@ -4,8 +4,8 @@ import karlney.tetris.core.*;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static karlney.tetris.BoardBuilder.createBoard;
-import static karlney.tetris.PieceBuilder.createPiece;
+import static karlney.tetris.test.BoardBuilder.createBoard;
+import static karlney.tetris.test.PieceBuilder.createPiece;
 
 /**
  * Date: 2012-11-04
@@ -45,7 +45,7 @@ public class LandingHeightBoardMeasureTest {
         pi.rotateIfPossible();
         pi.stepDownAFAP();
         board.placePieceOnBoard(pi);
-        assertEquals(1.5,BoardMeasuresUtil.getLandingHeight(board,pi));
+        assertEquals(1.5, BoardMeasuresUtil.getLandingHeight(board, pi));
     }  //Confirmed
 
 
