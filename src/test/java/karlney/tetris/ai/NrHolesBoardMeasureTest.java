@@ -1,6 +1,7 @@
 package karlney.tetris.ai;
 
 import karlney.tetris.core.Board;
+import karlney.tetris.test.BoardBuilder;
 import org.junit.Test;
 
 import static karlney.tetris.test.BoardBuilder.*;
@@ -41,6 +42,22 @@ public class NrHolesBoardMeasureTest {
                 {1,0,0,0},
                 {0,1,1,0},
                 {0,0,0,0}});
+        assertEquals(9,BoardMeasuresUtil.getNrHoles(board));
+    }
+
+    @Test
+    public void testComplexBoard_Expect9(){
+
+        Board board = BoardBuilder.createBoard(8, new int[][]{
+                {1, 0, 1, 0, 1, 0, 0, 1, 0, 1},//
+                {1, 0, 0, 1, 0, 1, 1, 1, 0, 0},//
+                {1, 0, 1, 0, 0, 1, 1, 1, 1, 1},//
+                {1, 0, 1, 0, 1, 1, 1, 1, 1, 0},//
+                {1, 0, 0, 0, 0, 1, 1, 0, 1, 0},//
+                {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},//
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}});
+
         assertEquals(9,BoardMeasuresUtil.getNrHoles(board));
     }
 

@@ -5,12 +5,12 @@ public abstract class PieceISZ extends AbstractPiece {
     private boolean tilted;
 
     public PieceISZ(int x, int y, Board board, Square[][] piece) {
-        super(x,y,board,piece);
+        super(x,y, 0, board,piece);
         tilted=true;
     }
 
     public PieceISZ(PieceISZ copy, int x, int y, int rotation, Board board) {
-        this(x, y, board, copy.shape.clone());
+        super(x,y, copy.getOrientation(), board,copy.shape.clone());
         this.tilted = copy.tilted;
         for (int i=0; i<rotation; i++){
             rotateNoCheck();

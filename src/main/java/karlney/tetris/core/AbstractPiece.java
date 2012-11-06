@@ -24,17 +24,18 @@ public abstract class AbstractPiece implements Piece {
      *
      * @param x start pos x
      * @param y start pos y
+     * @param orientation the orientation of this piece
      * @param board the new board that this piece is placed in
      * @param shape the piece squares
      */
-    public AbstractPiece(int x, int y, Board board, Square[][] shape){
+    public AbstractPiece(int x, int y, int orientation, Board board, Square[][] shape){
+        this.rotation = orientation;
         this.board = board;
         inputsAccepted = true;
         slides = 0;
         this.shape = shape;
         this.x=x;
         this.y=y;
-        this.rotation=0;
     }
 
     /**
@@ -50,7 +51,7 @@ public abstract class AbstractPiece implements Piece {
      * @param board the new board that this piece is placed in
      */
     public AbstractPiece(AbstractPiece copy, int x, int y, int deltaRotation, Board board){
-        this(x,y,board,copyPiece(copy.shape));
+        this(x,y,copy.getOrientation(),board,copyPiece(copy.shape));
         for (int i=0; i<deltaRotation; i++){
             rotateNoCheck();
         }

@@ -3,11 +3,11 @@ package karlney.tetris.core;
 public class PieceO extends AbstractPiece {
 
     public PieceO(int x, int y,  Board board, Square[][] piece) {
-        super(x,y,board,piece);
+        super(x,y, 0, board,piece);
     }
 
     public PieceO(PieceO copy, int x, int y, Board board) {
-        super(copy,x,y,0,board);
+        super(copy,x,y,copy.getOrientation(),board);
     }
 
     @Override

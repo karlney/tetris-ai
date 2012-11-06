@@ -8,8 +8,8 @@ public class PieceJLT extends AbstractPiece {
     private static Logger log = LoggerFactory.getLogger(PieceJLT.class);
 
 
-    public PieceJLT(int x, int y,  Board board, Square[][] piece) {
-        super(x,y,board,piece);
+    public PieceJLT(int x, int y, Board board, Square[][] piece) {
+        super(x,y, 0, board,piece);
     }
 
     public PieceJLT(PieceJLT copy, int x, int y, int rotation, Board board) {
