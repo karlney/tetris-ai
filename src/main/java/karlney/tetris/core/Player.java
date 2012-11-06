@@ -101,7 +101,7 @@ public class Player implements Runnable{
         lines +=removedRows;
 
         if (lines>0 && removedRows>0 && (lines)%100==0){
-            log.info("Lines cleared "+lines+". Pieces played "+getNumberOfPieces()+" Lines/Pieces "+(lines+1.0)/(double)getNumberOfPieces());
+            log.info("Lines cleared "+lines+". Pieces played "+getNumberOfPieces()+" Pieces/Lines "+(double)getNumberOfPieces()/(lines));
         }
     }
 

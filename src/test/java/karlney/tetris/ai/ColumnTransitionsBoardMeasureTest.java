@@ -18,7 +18,7 @@ public class ColumnTransitionsBoardMeasureTest {
     @Test
     public void testEmptyBoard_Expect0(){
         Board board = createEmptyBoard(4, 4);
-        assertEquals(4,BoardMeasuresUtil.getColumnTransitions(board));
+        assertEquals(0,BoardMeasuresUtil.getColumnTransitions(board));
     }
 
     @Test

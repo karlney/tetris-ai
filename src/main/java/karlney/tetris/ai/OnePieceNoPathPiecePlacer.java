@@ -42,7 +42,7 @@ public class OnePieceNoPathPiecePlacer implements PiecePlacer{
                     tb.stepDownAFAP();
                     if (board.allowedPlacement(tb)){
                         boardCopy.placePieceOnBoard(tb);
-                        int rows = board.removeFullRows();
+                        int rows = boardCopy.removeFullRows();
                         double utility = evaluator.score(boardCopy,tb,rows);
                         if (utility>bestUtility){
                             bestUtility=utility;

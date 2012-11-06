@@ -43,7 +43,7 @@ http://jswarm-pso.sourceforge.net/
 
 http://cilib.net/docs/dev/windows-configurations.html
  */
-public class IETetrisBoardEvaluator implements BoardEvaluator{
+public class ElAshiTetrisBoardEvaluator implements BoardEvaluator{
 
     double[] w = new double[]{0.0,
             -4.500158825082766,

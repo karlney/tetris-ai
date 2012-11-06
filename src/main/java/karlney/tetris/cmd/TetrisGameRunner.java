@@ -1,7 +1,7 @@
 package karlney.tetris.cmd;
 
 import karlney.tetris.ai.AIFactory;
-import karlney.tetris.ai.IETetrisBoardEvaluator;
+import karlney.tetris.ai.ElAshiTetrisBoardEvaluator;
 import karlney.tetris.core.Board;
 import karlney.tetris.core.PieceGenerator;
 import karlney.tetris.core.Player;
@@ -22,7 +22,7 @@ public class TetrisGameRunner {
     public static void main(String[] args) throws InterruptedException {
         TetrisGame game;
         PieceGenerator generator = new PieceGenerator();
-        Player player = AIFactory.getInstantMoveOnePieceAIPlayer(0, new Board(), generator, new IETetrisBoardEvaluator());
+        Player player = AIFactory.getInstantMoveOnePieceAIPlayer(0, new Board(), generator, new ElAshiTetrisBoardEvaluator());
         game = new TetrisGame(1, Arrays.asList(player));
         game.start();
 

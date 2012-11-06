@@ -24,7 +24,7 @@ public class OnePieceNoPathPicePlaceTest {
                 {0,1,1,1,1,1},
                 {0,1,1,1,1,1}});
         Piece piece = createPiece(PieceType.I, board);
-        new OnePieceNoPathPiecePlacer(new IETetrisBoardEvaluator()).bestPlacement(board,piece,null);
+        new OnePieceNoPathPiecePlacer(new ElAshiTetrisBoardEvaluator()).bestPlacement(board,piece,null);
     }
 
 

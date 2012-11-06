@@ -33,10 +33,10 @@ public class WellSumsBoardMeasureTest {
                 {1,0,1},
                 {1,0,1},
                 {0,0,0}});
-        assertEquals(2,BoardMeasuresUtil.getWellSums(board));
+        assertEquals(3,BoardMeasuresUtil.getWellSums(board));
     }
 
-        @Test
+    @Test
     public void testBoardWithOneWellAgainstTheWall_Expect1(){
         Board board = createBoard(3,4, new int[][]{
                 {0,1,1},
@@ -46,7 +46,7 @@ public class WellSumsBoardMeasureTest {
     }
 
 
-        /*
+    /*
 6. Well Sums: A well is a succession of empty cells such that their left cells and right cells are both filled.
     */
     @Test
@@ -59,8 +59,21 @@ public class WellSumsBoardMeasureTest {
                 {0,0,0,0,0,0,0,0}});
         //Note this is a bit strange that the rightmost 0 in row 2 counts as a well but it does according to the eltetris impl so I'll keep it as well
         //See here: https://github.com/ielashi/eltetris/blob/master/src/features.js
-        assertEquals(5,BoardMeasuresUtil.getWellSums(board));
+        assertEquals(6,BoardMeasuresUtil.getWellSums(board));
     }
 
 
+    @Test
+    public void testComplexBoard_Expect20(){
+        Board board = createBoard(12, new int[][]{
+                {1,0,1,0,0,1,0,1,0,0},
+                {0,0,0,1,1,1,0,1,0,0},
+                {1,1,1,1,1,0,0,1,0,0},
+                {0,1,1,1,1,1,0,1,0,0},
+                {0,1,1,1,1,1,0,1,0,0},
+                {0,1,0,1,1,0,0,0,0,0},
+                {0,0,0,1,1,0,0,0,0,0},
+                {0,0,0,1,0,0,0,0,0,0}});
+        assertEquals(20,BoardMeasuresUtil.getWellSums(board));
+    }
 }

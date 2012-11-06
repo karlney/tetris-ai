@@ -33,40 +33,8 @@ public class BoardMeasuresUtil {
     }*/
 
     /*
-    public static int getFullRows(Board board){
-        int removed=0;
-        for(int j= board.getRows(); j>0; j--){
-            boolean fullRow = true;
-            for(int i= board.getCols(); i>0; i--){
-                fullRow = (fullRow && board.getBoard()[i][j].isFilled());
-            }
-            if(fullRow){
-                removed++;
-            }
-        }
-        return removed;
-    }
-
     public double getBlockDensity(){
         return (getNrOfBlocks()+0.0)/(getMaxHeight()*10.0);
-    }
-
-    /*
-    public double getNrHoles(){
-        double nr=0;
-        for (int i=0; i<= cols; i++)	{
-            int last=0;
-            for (int j= rows; j>0; j--){
-                if (board[i][j].isFilled()){
-                    nr+=1*Math.pow(last,1.25);
-                    last=0;
-                }
-                else{
-                    last++;
-                }
-            }
-        }
-        return nr;
     }
     */
 
@@ -120,17 +88,6 @@ public class BoardMeasuresUtil {
         return out;
     }
 
-
-    /*
-    It’s best to try not to have any holes at all, but sometimes having a hole or two is inevitable.
-    What can we do after we have holes in our formation? Good question, but we should not pile more blocks on top of our holes.
-    If we define a blockade as any block that’s directly above a hole, we should penalize blockades:
-     /
-    public int getBlockades() {
-        throw new UnsupportedOperationException();
-    }
-
-    */
 
     /*
 1. Landing Height: The height where the piece is put (= the height of the column + (the height of the piece / 2))
@@ -228,15 +185,38 @@ public class BoardMeasuresUtil {
 
     /*
 6. Well Sums: A well is a succession of empty cells such that their left cells and right cells are both filled.
+
+function GetWellSums(board, num_columns) {
+  var well_sums = 0;
+
+  for (var i = 1; i < num_columns - 1; ++i) {
+    for (var j = board.length - 1; j >= 0; --j) {
+      if ((((board[j] >> i) & 1) == 0) &&
+        (((board[j] >> (i - 1)) & 1) == 1) &&
+        (((board[j] >> (i + 1)) & 1) == 1)) {
+        // Found well cell, count it + the number of empty cells below it.
+
+        ++well_sums;
+        for (var k = j - 1; k >= 0; --k) {
+          if (((board[k] >> i) & 1) == 0) {
+            ++well_sums;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+  }
+
     */
     public static int getWellSums(Board board) {
         int nr=0;
-        for (int i=1; i<=board.getCols()+1; i++){
-            for (int j= board.getRows(); j>0; j--){
+        for (int j= board.getRows(); j>0; j--){
+            for (int i=1; i<=board.getCols()+1; i++){
                 if (!board.getSquare(i,j).isFilled() && board.getSquare(i-1,j).isFilled() && board.getSquare(i+1,j).isFilled()){
                     //Found well cell, count it plus the number of empty cells below it
                     nr++;
-                    for (int k = j+1; k<board.getRows(); k++){
+                    for (int k = j+1; k<=board.getRows(); k++){
                         if (!board.getSquare(i,k).isFilled()) {
                             nr++;
                         }else{
