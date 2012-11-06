@@ -134,10 +134,47 @@ public class BoardMeasuresUtil {
 
     /*
 1. Landing Height: The height where the piece is put (= the height of the column + (the height of the piece / 2))
+
+  var lh = last_move.landing_height + ((last_move.piece.length - 1) / 2);
+
      */
-    public static double getLandingHeight(int boardRows, Piece piece) {
-        return boardRows - piece.getY() - piece.getSize()/2.0 +1;
+    public static double getLandingHeight(Board board, Piece piece) {
+        return getColumnHeight(board,piece)+((getPieceHeight(piece)-1)/2.0);
     }
+
+    private static int getEmptyTopRows(Piece piece) {
+        boolean filled = false;
+        for (int i=0; i<piece.getSize();i++){
+            filled = filled || piece.isFilled(i,0);
+        }
+        return filled?0:1;
+    }
+
+    private static double getColumnHeight(Board board,Piece piece) {
+        int y = piece.getY()+getEmptyTopRows(piece);
+        return board.getRows()-y-getPieceHeight(piece)+1;
+    }
+
+    private static double getPieceHeight(Piece piece) {
+        int start = -1;
+        for (int j=0;j<piece.getSize();j++){
+            for (int i=0; i<piece.getSize();i++){
+                if (start<0 && piece.isFilled(i,j)){
+                    start=j;
+                }
+            }
+        }
+        int end = -1;
+        for (int j=piece.getSize();j>0;j--){
+            for (int i=0; i<piece.getSize();i++){
+                if (end<0 && piece.isFilled(i,j-1)){
+                    end=j-1;
+                }
+            }
+        }
+        return end-start+1;
+    }
+
 
     /*
 3. Row Transitions: The total number of row transitions. A row transition occurs when an empty cell is adjacent to a filled cell on the same row and vice versa.
@@ -159,7 +196,7 @@ public class BoardMeasuresUtil {
      */
     public static int getColumnTransitions(Board board) {
         int nr=0;
-        for (int j=board.getRows()+1; j>1; j--){
+        for (int j=board.getRows(); j>1; j--){
             for (int i=1; i<board.getCols()+1; i++)	{
                 if (board.isFilled(i,j-1)!=board.isFilled(i,j)){
                     nr++;

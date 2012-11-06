@@ -98,8 +98,8 @@ public abstract class AbstractPiece implements Piece {
             slides=0;
             return false;
         } else {
-            if (inputsAccepted && slides<1){
-                //Down movement is NOT possible, but this is the first time this happens - then return false (= the piece should *not* be fixed)
+            if (inputsAccepted && slides<2){
+                //Down movement is NOT possible, but this is the first (or the second) time this happens - then return false (= the piece should *not* be fixed)
                 //to allow for one last iteration of input from the player
                 slides++;
             }else{

@@ -27,4 +27,8 @@ public class BoardBuilder {
         }
         return b;
     }
+
+    public static Board createBoard(int rows, int[][] bottomRows) {
+        return createBoard(bottomRows[0].length,rows,bottomRows);
+    }
 }

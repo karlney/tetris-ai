@@ -45,11 +45,17 @@ http://cilib.net/docs/dev/windows-configurations.html
  */
 public class IETetrisBoardEvaluator implements BoardEvaluator{
 
-    double[] w = new double[]{0.0,-4.500158825082766,3.4181268101392694,-3.2178882868487753,-9.348695305445199,-7.899265427351652,-3.3855972247263626};
+    double[] w = new double[]{0.0,
+            -4.500158825082766,
+            3.4181268101392694,
+            -3.2178882868487753,
+            -9.348695305445199,
+            -7.899265427351652,
+            -3.3855972247263626};
 
     @Override
     public double score(Board board, Piece piece, int rows) {
-        double lh = BoardMeasuresUtil.getLandingHeight(board.getRows(),piece);
+        double lh = BoardMeasuresUtil.getLandingHeight(board,piece);
         int re = rows;
         int rt = BoardMeasuresUtil.getRowTransitions(board);
         int ct = BoardMeasuresUtil.getColumnTransitions(board);

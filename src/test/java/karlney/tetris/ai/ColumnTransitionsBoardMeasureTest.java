@@ -24,7 +24,7 @@ public class ColumnTransitionsBoardMeasureTest {
     @Test
     public void testBoardWithoutHoles_Expect2(){
         Board board = createBoard(8, 6, new int[][]{{0,1,1,0,0,0,0,0}});
-        assertEquals(8,BoardMeasuresUtil.getColumnTransitions(board));
+        assertEquals(2,BoardMeasuresUtil.getColumnTransitions(board));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class ColumnTransitionsBoardMeasureTest {
                 {1,1,0},
                 {0,1,1},
                 {1,0,0}});
-        assertEquals(8,BoardMeasuresUtil.getColumnTransitions(board));
+        assertEquals(7,BoardMeasuresUtil.getColumnTransitions(board));
     }
 
 
