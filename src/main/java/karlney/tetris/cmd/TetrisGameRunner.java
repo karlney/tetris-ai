@@ -19,6 +19,11 @@ import java.util.Arrays;
  */
 public class TetrisGameRunner {
 
+    /*
+    21:06:47.152 [Thread-1] INFO  karlney.tetris.core.Player - The next piece T {x=5 y=0 h=0}  could not be placed on the board. This means GAME OVER.
+21:06:47.152 [Thread-1] INFO  karlney.tetris.core.Player - Player thread stopped with: Lines cleared 834047. Pieces played 2085143
+21:06:47.152 [Thread-1] INFO  karlney.tetris.core.Player - AI Thread stopped.
+     */
 
 
     public static void main(String[] args) throws InterruptedException {
