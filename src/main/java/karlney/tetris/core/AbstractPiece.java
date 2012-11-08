@@ -83,10 +83,10 @@ public abstract class AbstractPiece implements Piece {
 
     @Override
     public synchronized void stepDownAFAP(){
-        boolean downMovePossible = board.allowedPlacement(x, y + 1, shape);
+        boolean downMovePossible = board.allowedPlacement(x, y+1, shape);
         while (downMovePossible){
             y++;
-            downMovePossible = board.allowedPlacement(x, y + 1, shape);
+            downMovePossible = board.allowedPlacement(x, y+1, shape);
         }
     }
 

@@ -43,7 +43,8 @@ public class OnePieceNoPathPicePlaceTest {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}});
 
         Piece piece = createPiece(PieceType.I, boardBefore);
-        Piece out = new OnePieceNoPathPiecePlacer(new ElAshiTetrisBoardEvaluator()).bestPlacement(boardBefore,piece,null);
+        Piece out = new OnePieceNoPathCheckPiecePlacer()
+                .bestPlacement(new ElAshiTetrisBoardEvaluator(),boardBefore,piece,null);
         assertEquals(-571.2945084331699,new ElAshiTetrisBoardEvaluator().score(boardAfter,out,1));
         assertEquals(out.getX(),-1);
         assertEquals(1,out.getOrientation());

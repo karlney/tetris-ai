@@ -58,8 +58,8 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
         }
 
 
-        Player player = new Player(new Board(),generator,level);
-        //Player player = AIFactory.getInstantMoveOnePieceAIPlayer(0,new Board(),generator,new IETetrisBoardEvaluator());
+        //Player player = new Player(new Board(),generator,level);
+        Player player = AIFactory.getInstantMoveOnePieceAIPlayer(new Board(),generator,new ElAshiTetrisBoardEvaluator(),level,1);
 
         game = new TetrisGame(level,Arrays.asList(player));
         game.start();

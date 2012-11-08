@@ -16,22 +16,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author karl.neyvaldt
  */
-public class OnePieceNoPathPiecePlacer implements PiecePlacer{
+public class OnePieceNoPathCheckPiecePlacer implements PiecePlacer{
 
-    private static Logger log = LoggerFactory.getLogger(OnePieceNoPathPiecePlacer.class);
-
-    private BoardEvaluator evaluator;
-
-    public OnePieceNoPathPiecePlacer(BoardEvaluator evaluator) {
-        this.evaluator = evaluator;
-    }
+    private static Logger log = LoggerFactory.getLogger(OnePieceNoPathCheckPiecePlacer.class);
 
     @Override
-    public Piece bestPlacement(Board board, Piece currentPiece, Piece nextPiece) {
+    public Piece bestPlacement(BoardEvaluator evaluator, Board board, Piece currentPiece, Piece nextPiece) {
 
         double bestUtility = Integer.MIN_VALUE;
         //TODO be a bit smarter when it comes to rotations and translations
-        int y = 1;
+        int y = 0;
         Piece best = currentPiece.getTranslatedCopy(currentPiece.getX(), currentPiece.getY(), 0, board);
         best.stepDownAFAP();
         try{
@@ -57,4 +51,5 @@ public class OnePieceNoPathPiecePlacer implements PiecePlacer{
         }
         return best;
     }
+
 }

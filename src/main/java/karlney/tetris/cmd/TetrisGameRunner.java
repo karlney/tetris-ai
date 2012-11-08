@@ -19,11 +19,14 @@ import java.util.Arrays;
  */
 public class TetrisGameRunner {
 
+
+
     public static void main(String[] args) throws InterruptedException {
         TetrisGame game;
-        PieceGenerator generator = new PieceGenerator();
-        Player player = AIFactory.getInstantMoveOnePieceAIPlayer(0, new Board(), generator, new ElAshiTetrisBoardEvaluator());
-        game = new TetrisGame(1, Arrays.asList(player));
+        PieceGenerator generator = new PieceGenerator(1);
+        int level = 1;
+        Player player = AIFactory.getInstantMoveOnePieceAIPlayer(new Board(), generator, new ElAshiTetrisBoardEvaluator(),level,0);
+        game = new TetrisGame(level, Arrays.asList(player));
         game.start();
 
         while (!game.hasEnded()){

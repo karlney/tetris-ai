@@ -16,7 +16,7 @@ public class TetrisGame {
     private static final int MAX_LEVEL = 10; //level 11 is only for AI training
     private static final int MIN_LEVEL = 1;  //level 0 is only for debugging
 
-    private static final int[] LEVEL_DELAYS = {1000000, 500,450,400,350,300,250,200,150,100,50,0};
+    private static final int[] LEVEL_DELAYS = {Integer.MAX_VALUE, 500,450,400,350,300,250,200,150,100,50,0};
 
     //True when the game is started (False only if the game is created but not yet started)
     private boolean gameStarted;

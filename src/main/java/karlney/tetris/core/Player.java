@@ -63,7 +63,7 @@ public class Player implements Runnable{
         log.info("Player thread stopped with: Lines cleared "+lines+". Pieces played "+getNumberOfPieces());
     }
 
-    public synchronized void moveDown(){
+    public synchronized void moveDownOrLand(){
         boolean pieceIsLanded = currentPiece.moveDown(); //TODO there can be things that happens in between here..
         if (pieceIsLanded){
             try {
@@ -149,9 +149,10 @@ public class Player implements Runnable{
                     Thread.sleep(delay);
                 }
             }catch(InterruptedException e) {}
-            moveDown();
+            moveDownOrLand();
         }
     }
+
 
     public Piece getNextPiece() {
         return nextPiece;
