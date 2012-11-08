@@ -1,9 +1,6 @@
 package karlney.tetris.test;
 
-import karlney.tetris.core.Board;
-import karlney.tetris.core.Piece;
-import karlney.tetris.core.PieceGenerator;
-import karlney.tetris.core.PieceType;
+import karlney.tetris.core.*;
 
 /**
  * TODO javadoc
@@ -15,12 +12,12 @@ import karlney.tetris.core.PieceType;
  */
 public class PieceBuilder {
 
-    private static PieceGenerator gen = new PieceGenerator();
+    private static PieceGenerator gen = new RandomPieceGenerator();
 
     public static Piece createPiece(PieceType type, Board board){
         Piece p;
         do{
-            p = gen.getNextBlock(board);
+            p = gen.getNextPiece(board);
         }while (type != p.getType());
         return p;
     }

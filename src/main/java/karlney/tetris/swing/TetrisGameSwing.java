@@ -44,7 +44,7 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
 
 
     public TetrisGame game;
-    public PieceGenerator generator = new PieceGenerator();
+    public PieceGenerator generator = new RandomPieceGenerator();
 
 
     /**
@@ -57,9 +57,17 @@ public class TetrisGameSwing extends JPanel implements Runnable,KeyListener,Acti
             level = game.getLevel();
         }
 
+        Board board = BoardBuilder.createBoard(10, 20, new int[][]{
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                {1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                {1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+                {1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+                {1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+        });
 
         //Player player = new Player(new Board(),generator,level);
-        Player player = AIFactory.getInstantMoveOnePieceAIPlayer(new Board(),generator,new ElAshiTetrisBoardEvaluator(),level,1);
+        Player player = AIPlayerBuilder.getInstantMoveOnePieceAIPlayer(board, generator, new ElAshiTetrisBoardEvaluator(), level, 0);
 
         game = new TetrisGame(level,Arrays.asList(player));
         game.start();

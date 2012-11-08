@@ -47,8 +47,8 @@ public class OnePieceNoPathCheckPiecePlacer implements PiecePlacer{
             }
         }catch (Exception e){
             log.error("Best placement crashed",e);
-            e.printStackTrace();
         }
+        //log.debug(bestUtility+"");
         return best;
     }
 

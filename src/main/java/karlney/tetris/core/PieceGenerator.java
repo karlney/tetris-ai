@@ -1,93 +1,15 @@
 package karlney.tetris.core;
 
-import java.util.Random;
-
 /**
- * This is the PieceGenerator class. It is responsible of generating new blocks
+ * TODO javadoc
+ * <p/>
+ * Date: 2012-11-08
+ * Time: 21:30
+ *
+ * @author karl.neyvaldt
  */
-public class PieceGenerator {
+public interface PieceGenerator {
 
-    private static boolean[][][] PIECE_SHAPES ={
-            {{true,true},{true,true}},                                     // O = 1
-            {{false,true,false,false},{false,true,false,false},{false,true,false,false},{false,true,false,false}}, // I = 2
-            {{false,false,true},  {false,true,true}, {false,true,false}},  // S = 3
-            {{false,true,false},  {false,true,true}, {false,false,true}},  // Z = 4
-            {{false,true,true},  {false,true,false}, {false,true,false}},  // L = 5
-            {{false,true,false},  {false,true,false}, {false,true,true}},  // J = 6
-            {{false,true,false},  {false,true,true}, {false,true,false}}}; // T = 7
-
-    private final static int NUMBER_OF_BLOCKS = 7;
-
-    //Random generator for next blocks
-    private Random generator;
-
-
-    public PieceGenerator() {
-        generator = new Random();
-    }
-
-    public PieceGenerator(int seed) {
-        generator = new Random(seed);
-    }
-
-
-    private Square[][] buildShape(PieceType type) {
-        boolean[][] bools = PIECE_SHAPES[type.getValue()-1];
-        Square[][] out = new Square[bools.length][bools.length];
-        for (int i=0;i<bools.length;i++){
-            for (int j=0;j<bools[i].length;j++){
-                out[i][j] = new Square(type,bools[i][j]);
-            }
-        }
-        return out;
-    }
-
-    /*
-
-    //TODO compensate for non 10 width
-    public int getStartPosX(PieceType type) {
-        if (type == PieceType.O){
-            return DEFAULT_START_POS_X+1;
-        }else if (type == PieceType.I){
-            return DEFAULT_START_POS_X-1;
-        }else{
-            return DEFAULT_START_POS_X;
-        }
-    }
-
-    public int getStartPosY(PieceType type) {
-        if (type == PieceType.O){
-            return 0;
-        }else{
-            return DEFAULT_START_POS_Y;
-        }
-    }
-     */
-
-    public Piece getNextBlock(Board board){
-        PieceType type = PieceType.valueOf(generator.nextInt(NUMBER_OF_BLOCKS));
-        switch (type){
-            case O  : return new PieceO(getStartX(board, type),getStartY(type),board,buildShape(type));
-            case I  : return new PieceI(getStartX(board, type),getStartY(type),board,buildShape(type));
-            case S  : return new PieceS(getStartX(board, type),getStartY(type),board,buildShape(type));
-            case Z  : return new PieceZ(getStartX(board, type),getStartY(type),board,buildShape(type));
-            default : return new PieceJLT(getStartX(board, type),getStartY(type),board,buildShape(type));
-        }
-    }
-
-    private int getStartY(PieceType type) {
-        switch (type){
-            case O  : return 1;
-            default : return 0;
-        }
-    }
-
-    private int getStartX(Board board, PieceType type) {
-        int middle = board.getCols()/2;
-        switch (type){
-            case I  : return middle-1;
-            default : return middle;
-        }
-    }
+    Piece getNextPiece(Board board);
 
 }

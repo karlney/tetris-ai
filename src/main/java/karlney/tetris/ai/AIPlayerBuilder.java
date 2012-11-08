@@ -9,9 +9,9 @@ import karlney.tetris.core.PieceGenerator;
  *
  * @author karl.neyvaldt
  */
-public class AIFactory {
+public class AIPlayerBuilder {
 
-    private AIFactory(){}
+    private AIPlayerBuilder(){}
 
     public static AIPlayer getInstantMoveOnePieceAIPlayer(Board board, PieceGenerator generator, BoardEvaluator evaluator, int level, int moveDelay){
         return new AIPlayer(

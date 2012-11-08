@@ -19,7 +19,7 @@ public class Player implements Runnable{
     protected Piece currentPiece;
     protected Piece nextPiece;
 
-    private int score = 0;
+    private long score = 0;
     private int lines = 0;
     private int freeFallIterations = 0;
     private Map<PieceType,Integer> pieceStatistics;
@@ -35,8 +35,8 @@ public class Player implements Runnable{
         score = 0;
         lines = 0;
         freeFallIterations = 0;
-        currentPiece = generator.getNextBlock(board);
-        nextPiece = generator.getNextBlock(board);
+        currentPiece = generator.getNextPiece(board);
+        nextPiece = generator.getNextPiece(board);
         running = false;
         pieceStatistics = new TreeMap<PieceType, Integer>();
         for (PieceType t: PieceType.values()){
@@ -110,7 +110,7 @@ public class Player implements Runnable{
         int rows= board.removeFullRows();
         updatePlaceScore(rows);
         currentPiece = nextPiece;
-        nextPiece    = generator.getNextBlock(board);
+        nextPiece    = generator.getNextPiece(board);
         freeFallIterations = 0;
         updateDistribution(currentPiece.getSquare(0, 0).getType());
         //Make sure we have not reached end of game
@@ -166,7 +166,7 @@ public class Player implements Runnable{
         return board;
     }
 
-    public int getScore() {
+    public long getScore() {
         return score;
     }
 
